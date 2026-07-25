@@ -28,6 +28,7 @@ dependencies {
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
+	implementation 'org.flywaydb:flyway-database-postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
