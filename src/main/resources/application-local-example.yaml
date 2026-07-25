@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/izen
+    username: postgres
+    password: # Secret Key
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations:
+      - classpath:db/migration
+
+jwt:
+  access:
+    secret: # Secret Key
+    expiration: 30m
+  refresh:
+    secret: # Secret Key
+    expiration: 14d
+
+logging:
+  level:
+    p6spy: INFO
