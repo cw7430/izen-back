@@ -105,15 +105,15 @@ CREATE TABLE employee.profile
             OR
         (employee.profile.employee_role = 'LEFT' AND employee.profile.deleted_at IS NOT NULL)
         )),
-    CONSTRAINT fk_profile_account
+    CONSTRAINT fk_profile_account_1
         FOREIGN KEY (id)
             REFERENCES auth.account (id)
             ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT fk_profile_team
+    CONSTRAINT fk_profile_team_1
         FOREIGN KEY (team_id)
             REFERENCES employee.team (id)
             ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT fk_position
+    CONSTRAINT fk_position_1
         FOREIGN KEY (position_id)
             REFERENCES employee.position (id)
             ON DELETE CASCADE ON UPDATE CASCADE
