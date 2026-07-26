@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.izen.module.auth.AuthMapper">
+    <select id="findLoginInfo" parameterType="LoginRequestDto" resultType="LoginVo">
+        /*auth.findLoginInfo */
+        SELECT a.id as accountId,
+               a.password_hash,
+               a.auth_role,
+               b.employee_code,
+               b.employee_name,
+               b.employee_role,
+               d.department_code,
+               c.team_code,
+               e.position_code
+        FROM auth.account a
+                 JOIN employee.profile b
+                      ON a.id = b.id
+                 JOIN employee.team c
+                      ON b.team_id = c.id
+                 JOIN employee.department d
+                      ON c.department_id = d.id
+                 JOIN employee.position e on b.position_id = e.id
+        WHERE a.user_name = #{userName}
+    </select>
+
+    <select id="findRefreshInfo" resultType="LoginVo">
+        /*auth.findRefreshInfo */
+        SELECT a.id as accountId,
+               a.password_hash,
+               a.auth_role,
+               b.employee_code,
+               b.employee_name,
+               b.employee_role,
+               d.department_code,
+               c.team_code,
+               e.position_code
+        FROM auth.account a
+                 JOIN employee.profile b
+                      ON a.id = b.id
+                 JOIN employee.team c
+                      ON b.team_id = c.id
+                 JOIN employee.department d
+                      ON c.department_id = d.id
+                 JOIN employee.position e on b.position_id = e.id
+        WHERE a.id = #{accountId}
+    </select>
+</mapper>
