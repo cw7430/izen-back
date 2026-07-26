@@ -2,46 +2,80 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.izen.module.auth.AuthMapper">
     <select id="findLoginInfo" parameterType="LoginRequestDto" resultType="LoginVo">
-        /*auth.findLoginInfo */
-        SELECT a.id as accountId,
-               a.password_hash,
-               a.auth_role,
-               b.employee_code,
-               b.employee_name,
-               b.employee_role,
-               d.department_code,
-               c.team_code,
-               e.position_code
-        FROM auth.account a
-                 JOIN employee.profile b
-                      ON a.id = b.id
-                 JOIN employee.team c
-                      ON b.team_id = c.id
-                 JOIN employee.department d
-                      ON c.department_id = d.id
-                 JOIN employee.position e on b.position_id = e.id
-        WHERE a.user_name = #{userName}
+      /*AuthMapper.findLoginInfo */
+      SELECT a.id as accountId,
+             a.password_hash,
+             a.auth_role,
+             b.employee_code,
+             b.employee_name,
+             b.employee_role,
+             d.department_code,
+             c.team_code,
+             e.position_code
+      FROM auth.account a
+             JOIN employee.profile b
+                  ON a.id = b.id
+             JOIN employee.team c
+                  ON b.team_id = c.id
+             JOIN employee.department d
+                  ON c.department_id = d.id
+             JOIN employee.position e on b.position_id = e.id
+      WHERE a.user_name = #{userName}
+        AND a.auth_role != 'LEFT'
     </select>
 
     <select id="findRefreshInfo" resultType="LoginVo">
-        /*auth.findRefreshInfo */
-        SELECT a.id as accountId,
-               a.password_hash,
-               a.auth_role,
-               b.employee_code,
-               b.employee_name,
-               b.employee_role,
-               d.department_code,
-               c.team_code,
-               e.position_code
-        FROM auth.account a
-                 JOIN employee.profile b
-                      ON a.id = b.id
-                 JOIN employee.team c
-                      ON b.team_id = c.id
-                 JOIN employee.department d
-                      ON c.department_id = d.id
-                 JOIN employee.position e on b.position_id = e.id
-        WHERE a.id = #{accountId}
+      /*AuthMapper.findRefreshInfo */
+      SELECT a.id as accountId,
+             a.password_hash,
+             a.auth_role,
+             b.employee_code,
+             b.employee_name,
+             b.employee_role,
+             d.department_code,
+             c.team_code,
+             e.position_code
+      FROM auth.account a
+             JOIN employee.profile b
+                  ON a.id = b.id
+             JOIN employee.team c
+                  ON b.team_id = c.id
+             JOIN employee.department d
+                  ON c.department_id = d.id
+             JOIN employee.position e on b.position_id = e.id
+      WHERE a.id = #{accountId}
+        AND a.auth_role != 'LEFT'
     </select>
+
+    <select id="findRefreshToken" resultType="RefreshTokenVo">
+      /*AuthMapper.findRefreshToken*/
+      SELECT id as refreshTokenId,
+             account_id,
+             token,
+             expires_at
+      FROM auth.refresh_token
+      WHERE account_id = #{accountId}
+        AND token = #{refreshToken}
+    </select>
+
+    <insert id="createRefreshToken">
+      /*AuthMapper.createRefreshToken*/
+      INSERT INTO auth.refresh_token
+        (account_id, token, expires_at)
+      VALUES (#{accountId}, #{refreshToken}, #{expiresAt})
+    </insert>
+
+    <delete id="deleteRefreshTokenById">
+      /*AuthMapper.deleteRefreshTokenById*/
+      DELETE
+      FROM auth.refresh_token
+      WHERE id = #{refreshTokenId}
+    </delete>
+
+  <delete id="deleteRefreshTokenByToken">
+    /*AuthMapper.deleteRefreshTokenByToken*/
+    DELETE
+    FROM auth.refresh_token
+    WHERE token = #{refreshToken}
+  </delete>
 </mapper>
