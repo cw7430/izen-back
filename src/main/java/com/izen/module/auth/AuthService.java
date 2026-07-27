@@ -5,9 +5,7 @@ import com.izen.common.api.type.ResponseCode;
 import com.izen.common.config.security.JwtProvider;
 import com.izen.common.config.security.JwtUtil;
 import com.izen.common.config.security.type.TokenResponseClaim;
-import com.izen.module.auth.dto.request.LoginRequestDto;
-import com.izen.module.auth.dto.request.LogoutRequestDto;
-import com.izen.module.auth.dto.request.RefreshRequestDto;
+import com.izen.module.auth.dto.request.*;
 import com.izen.module.auth.dto.response.LoginResponseDto;
 import com.izen.module.auth.dto.vo.LoginVo;
 import com.izen.module.auth.dto.vo.RefreshTokenVo;
@@ -90,10 +88,78 @@ public class AuthService {
     }
 
     public void logout(LogoutRequestDto reqDto) {
-        if(reqDto.refreshToken() == null) {
+        if (reqDto.refreshToken() == null) {
             return;
         }
 
         authMapper.deleteRefreshTokenByToken(reqDto.refreshToken());
+    }
+
+    public void checkUserDuplicate(CheckUserRequestDto reqDto) {
+        boolean isDuplicate = authMapper.existsByUserName(reqDto.userName());
+        if (isDuplicate) {
+            throw new CustomException(ResponseCode.DUPLICATE_RESOURCE);
+        }
+
+        log.info("Check User successfully for user name:{}", reqDto.userName());
+    }
+
+    @Transactional
+    public void updateUserName(UpdateUserNameRequestDto reqDto) {
+        Long accountId = jwtUtil.getCurrentUserId();
+        boolean isDuplicate = authMapper.existsByUserName(reqDto.userName());
+        if (isDuplicate) {
+            throw new CustomException(ResponseCode.DUPLICATE_RESOURCE);
+        }
+
+        String passwordHash = authMapper.findPasswordHash(accountId)
+                .orElseThrow(() -> new CustomException(ResponseCode.UNAUTHORIZED));
+
+        if (passwordEncoder.matches(reqDto.password(), passwordHash)) {
+            throw new CustomException(ResponseCode.PASSWORD_ERROR);
+        }
+
+        int updateCnt = authMapper.updateUserName(accountId, reqDto.userName());
+        if (updateCnt == 0) {
+            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
+        }
+
+        log.info("Update User successfully for account ID:{}", accountId);
+    }
+
+    @Transactional
+    public void updatePassword(UpdatePasswordRequestDto reqDto) {
+        Long accountId = jwtUtil.getCurrentUserId();
+        String passwordHash = authMapper.findPasswordHash(accountId)
+                .orElseThrow(() -> new CustomException(ResponseCode.UNAUTHORIZED));
+
+        if (passwordEncoder.matches(reqDto.prevPassword(), passwordHash)) {
+            throw new CustomException(ResponseCode.PASSWORD_ERROR);
+        }
+
+        int updateCnt = authMapper.updatePassword(accountId, reqDto.prevPassword());
+        if (updateCnt == 0) {
+            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
+        }
+
+        log.info("Update Password successfully for account ID:{}", accountId);
+    }
+
+    @Transactional
+    public void updateAccount(UpdateAccountRequestDto reqDto) {
+        Long accountId = jwtUtil.getCurrentUserId();
+        String passwordHash = authMapper.findPasswordHash(accountId)
+                .orElseThrow(() -> new CustomException(ResponseCode.UNAUTHORIZED));
+
+        if (passwordEncoder.matches(reqDto.password(), passwordHash)) {
+            throw new CustomException(ResponseCode.PASSWORD_ERROR);
+        }
+
+        int updateCnt = authMapper.updateAccount(accountId, reqDto.phone(), reqDto.email());
+        if (updateCnt == 0) {
+            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
+        }
+        
+        log.info("Update Account successfully for account ID:{}", accountId);
     }
 }
