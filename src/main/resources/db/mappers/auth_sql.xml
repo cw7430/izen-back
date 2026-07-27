@@ -1,76 +1,76 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.izen.module.auth.AuthMapper">
-    <select id="findLoginInfo" parameterType="LoginRequestDto" resultType="LoginVo">
-      /*AuthMapper.findLoginInfo */
-      SELECT a.id as accountId,
-             a.password_hash,
-             a.auth_role,
-             b.employee_code,
-             b.employee_name,
-             b.employee_role,
-             d.department_code,
-             c.team_code,
-             e.position_code
-      FROM auth.account a
-             JOIN employee.profile b
-                  ON a.id = b.id
-             JOIN employee.team c
-                  ON b.team_id = c.id
-             JOIN employee.department d
-                  ON c.department_id = d.id
-             JOIN employee.position e on b.position_id = e.id
-      WHERE a.user_name = #{userName}
-        AND a.auth_role != 'LEFT'
-    </select>
+  <select id="findLoginInfo" parameterType="LoginRequestDto" resultType="LoginVo">
+    /*AuthMapper.findLoginInfo */
+    SELECT a.id as accountId,
+           a.password_hash,
+           a.auth_role,
+           b.employee_code,
+           b.employee_name,
+           b.employee_role,
+           d.department_code,
+           c.team_code,
+           e.position_code
+    FROM auth.account a
+           JOIN employee.profile b
+                ON a.id = b.id
+           JOIN employee.team c
+                ON b.team_id = c.id
+           JOIN employee.department d
+                ON c.department_id = d.id
+           JOIN employee.position e on b.position_id = e.id
+    WHERE a.user_name = #{userName}
+      AND a.auth_role != 'LEFT'
+  </select>
 
-    <select id="findRefreshInfo" resultType="LoginVo">
-      /*AuthMapper.findRefreshInfo */
-      SELECT a.id as accountId,
-             a.password_hash,
-             a.auth_role,
-             b.employee_code,
-             b.employee_name,
-             b.employee_role,
-             d.department_code,
-             c.team_code,
-             e.position_code
-      FROM auth.account a
-             JOIN employee.profile b
-                  ON a.id = b.id
-             JOIN employee.team c
-                  ON b.team_id = c.id
-             JOIN employee.department d
-                  ON c.department_id = d.id
-             JOIN employee.position e on b.position_id = e.id
-      WHERE a.id = #{accountId}
-        AND a.auth_role != 'LEFT'
-    </select>
+  <select id="findRefreshInfo" resultType="LoginVo">
+    /*AuthMapper.findRefreshInfo */
+    SELECT a.id as accountId,
+           a.password_hash,
+           a.auth_role,
+           b.employee_code,
+           b.employee_name,
+           b.employee_role,
+           d.department_code,
+           c.team_code,
+           e.position_code
+    FROM auth.account a
+           JOIN employee.profile b
+                ON a.id = b.id
+           JOIN employee.team c
+                ON b.team_id = c.id
+           JOIN employee.department d
+                ON c.department_id = d.id
+           JOIN employee.position e on b.position_id = e.id
+    WHERE a.id = #{accountId}
+      AND a.auth_role != 'LEFT'
+  </select>
 
-    <select id="findRefreshToken" resultType="RefreshTokenVo">
-      /*AuthMapper.findRefreshToken*/
-      SELECT id as refreshTokenId,
-             account_id,
-             token,
-             expires_at
-      FROM auth.refresh_token
-      WHERE account_id = #{accountId}
-        AND token = #{refreshToken}
-    </select>
+  <select id="findRefreshToken" resultType="RefreshTokenVo">
+    /*AuthMapper.findRefreshToken*/
+    SELECT id as refreshTokenId,
+           account_id,
+           token,
+           expires_at
+    FROM auth.refresh_token
+    WHERE account_id = #{accountId}
+      AND token = #{refreshToken}
+  </select>
 
-    <insert id="createRefreshToken">
-      /*AuthMapper.createRefreshToken*/
-      INSERT INTO auth.refresh_token
-        (account_id, token, expires_at)
-      VALUES (#{accountId}, #{refreshToken}, #{expiresAt})
-    </insert>
+  <insert id="createRefreshToken">
+    /*AuthMapper.createRefreshToken*/
+    INSERT INTO auth.refresh_token
+      (account_id, token, expires_at)
+    VALUES (#{accountId}, #{refreshToken}, #{expiresAt})
+  </insert>
 
-    <delete id="deleteRefreshTokenById">
-      /*AuthMapper.deleteRefreshTokenById*/
-      DELETE
-      FROM auth.refresh_token
-      WHERE id = #{refreshTokenId}
-    </delete>
+  <delete id="deleteRefreshTokenById">
+    /*AuthMapper.deleteRefreshTokenById*/
+    DELETE
+    FROM auth.refresh_token
+    WHERE id = #{refreshTokenId}
+  </delete>
 
   <delete id="deleteRefreshTokenByToken">
     /*AuthMapper.deleteRefreshTokenByToken*/
@@ -78,4 +78,46 @@
     FROM auth.refresh_token
     WHERE token = #{refreshToken}
   </delete>
+
+  <select id="existsByUserName" resultType="boolean">
+    /*AuthMapper.existsByUserName*/
+    SELECT EXISTS(SELECT 1
+                  FROM auth.account
+                  WHERE user_name = #{userName}
+                    AND auth_role != 'LEFT')
+  </select>
+
+  <select id="findPasswordHash" resultType="String">
+    /*AuthMapper.findPasswordHash*/
+    SELECT password_hash
+    FROM auth.account
+    WHERE id = #{accountId}
+  </select>
+
+  <update id="updateUserName">
+    /*AuthMapper.updateUserName*/
+    UPDATE
+      auth.account
+    SET user_name = #{userName}
+    WHERE id = #{accountId}
+  </update>
+
+  <update id="updatePassword">
+    /*AuthMapper.updatePassword*/
+    UPDATE
+      auth.account
+    SET password_hash = #{passwordHash}
+    WHERE id = #{accountId}
+
+  </update>
+
+  <update id="updateAccount">
+    /*AuthMapper.updateAccount*/
+    UPDATE
+      auth.account
+    SET phone      = #{phone},
+        email      = #{email},
+        updated_at = CURRENT_TIMESTAMP
+    WHERE id = #{accountId}
+  </update>
 </mapper>

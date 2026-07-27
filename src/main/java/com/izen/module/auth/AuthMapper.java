@@ -29,4 +29,18 @@ public interface AuthMapper {
     void deleteRefreshTokenById(@Param("refreshTokenId") Long refreshTokenId);
 
     void deleteRefreshTokenByToken(@Param("refreshToken") String refreshToken);
+
+    boolean existsByUserName(@Param("userName") String userName);
+
+    Optional<String> findPasswordHash(@Param("accountId") Long accountId);
+
+    int updateUserName(@Param("accountId") Long accountId, @Param("userName") String userName);
+
+    int updatePassword(@Param("accountId") Long accountId, @Param("passwordHash") String passwordHash);
+
+    int updateAccount(
+            @Param("accountId") Long accountId,
+            @Param("phone") String phone,
+            @Param("email") String email
+    );
 }
