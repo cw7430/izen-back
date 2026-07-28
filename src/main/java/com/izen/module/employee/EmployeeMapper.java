@@ -9,4 +9,6 @@ import java.util.List;
 @Mapper
 public interface EmployeeMapper {
     List<EmployeeProfileResponseDto> findEmployeeProfileList(EmployeeProfilesRequestDto dto);
+
+    long countEmployeeProfileList();
 }

@@ -1,65 +1,98 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.izen.module.employee.EmployeeMapper">
-    <select id="findEmployeeProfileList" parameterType="EmployeeProfilesRequestDto"
-            resultType="EmployeeProfileResponseDto">
-        /* EmployeeMapper.findEmployeeProfileList */
-        SELECT
-        a.id AS employeeId,
-        a.employee_code,
-        a.employee_role,
-        a.employee_name,
-        b.position_code,
-        b.position_name,
-        d.department_code,
-        d.department_name,
-        c.team_code,
-        c.team_name,
-        e.phone,
-        e.email,
-        a.created_by,
-        f.employee_name AS createdEmployeeName,
-        a.updated_by,
-        g.employee_name AS updatedEmployeeName,
-        a.created_at,
-        a.updated_at,
-        a.deleted_at
-        FROM employee.profile a
-        LEFT JOIN employee.position b ON a.position_id = b.id
-        LEFT JOIN employee.team c ON a.team_id = c.id
-        LEFT JOIN employee.department d ON c.department_id = d.id
-        LEFT JOIN auth.account e ON a.id = e.id
-        LEFT JOIN employee.profile f ON a.created_by = f.id
-        LEFT JOIN employee.profile g ON a.updated_by = g.id
-        ORDER BY
+  <resultMap id="employeeProfile" type="EmployeeProfileResponseDto">
+    <constructor>
+      <arg column="id" name="employeeId" javaType="Long"/>
+      <arg column="employee_code" name="employeeCode" javaType="String"/>
+      <arg column="employee_role" name="employeeRole"
+           javaType="com.izen.module.employee.type.EmployeeRole"/>
+      <arg column="employee_name" name="employeeName" javaType="String"/>
+      <arg column="position_code" name="positionCode" javaType="String"/>
+      <arg column="position_name" name="positionName" javaType="String"/>
+      <arg column="department_code" name="departmentCode" javaType="String"/>
+      <arg column="department_name" name="departmentName" javaType="String"/>
+      <arg column="team_code" name="teamCode" javaType="String"/>
+      <arg column="team_name" name="teamName" javaType="String"/>
+      <arg column="phone" name="phone" javaType="String"/>
+      <arg column="email" name="email" javaType="String"/>
+      <arg column="created_by" name="createdBy" javaType="Long"/>
+      <arg column="createdEmployeeName" name="createdEmployeeName" javaType="String"/>
+      <arg column="updated_by" name="updatedBy" javaType="Long"/>
+      <arg column="updatedEmployeeName" name="updatedEmployeeName" javaType="String"/>
+      <arg column="created_at" name="createdAt" javaType="java.time.Instant"/>
+      <arg column="updated_at" name="updatedAt" javaType="java.time.Instant"/>
+      <arg column="deleted_at" name="deletedAt" javaType="java.time.Instant"/>
+    </constructor>
+  </resultMap>
+
+  <select id="findEmployeeProfileList" parameterType="EmployeeProfilesRequestDto"
+          resultMap="employeeProfile">
+    /* EmployeeMapper.findEmployeeProfileList */
+    SELECT
+    a.id,
+    a.employee_code,
+    a.employee_role,
+    a.employee_name,
+    b.position_code,
+    b.position_name,
+    d.department_code,
+    d.department_name,
+    c.team_code,
+    c.team_name,
+    e.phone,
+    e.email,
+    a.created_by,
+    f.employee_name AS createdEmployeeName,
+    a.updated_by,
+    g.employee_name AS updatedEmployeeName,
+    a.created_at,
+    a.updated_at,
+    a.deleted_at
+    FROM employee.profile a
+    LEFT JOIN employee.position b ON a.position_id = b.id
+    LEFT JOIN employee.team c ON a.team_id = c.id
+    LEFT JOIN employee.department d ON c.department_id = d.id
+    LEFT JOIN auth.account e ON a.id = e.id
+    LEFT JOIN employee.profile f ON a.created_by = f.id
+    LEFT JOIN employee.profile g ON a.updated_by = g.id
+    WHERE
+    a.employee_role != 'LEFT'
+    ORDER BY
+    <choose>
+      <when test="sortOrder != null and sortOrder.name() == 'DESC'">
         <choose>
-            <when test="sortOrder != null and sortOrder.name() == 'DESC'">
-                <choose>
-                    <when test="sortPath.name() == 'POSITION'">
-                        b.position_code DESC, a.employee_code DESC, d.department_code DESC, a.created_at DESC
-                    </when>
-                    <when test="sortPath.name() == 'DEPARTMENT'">
-                        d.department_code DESC, a.employee_code DESC, b.position_code DESC, a.created_at DESC
-                    </when>
-                    <otherwise>
-                        a.employee_code DESC, b.position_code DESC, d.department_code DESC, a.created_at DESC
-                    </otherwise>
-                </choose>
-            </when>
-            <otherwise>
-                <choose>
-                    <when test="sortPath.name() == 'POSITION'">
-                        b.position_code ASC, a.employee_code ASC, d.department_code ASC, a.created_at ASC
-                    </when>
-                    <when test="sortPath.name() == 'DEPARTMENT'">
-                        d.department_code ASC, a.employee_code ASC, b.position_code ASC, a.created_at ASC
-                    </when>
-                    <otherwise>
-                        a.employee_code ASC, b.position_code ASC, d.department_code ASC, a.created_at ASC
-                    </otherwise>
-                </choose>
-            </otherwise>
+          <when test="sortPath.name() == 'POSITION'">
+            b.position_code DESC, a.employee_code DESC, d.department_code DESC, a.created_at DESC
+          </when>
+          <when test="sortPath.name() == 'DEPARTMENT'">
+            d.department_code DESC, a.employee_code DESC, b.position_code DESC, a.created_at DESC
+          </when>
+          <otherwise>
+            a.employee_code DESC, b.position_code DESC, d.department_code DESC, a.created_at DESC
+          </otherwise>
         </choose>
-        OFFSET (#{page} - 1) * #{size} FETCH NEXT #{size} ROWS ONLY
-    </select>
+      </when>
+      <otherwise>
+        <choose>
+          <when test="sortPath.name() == 'POSITION'">
+            b.position_code ASC, a.employee_code ASC, d.department_code ASC, a.created_at ASC
+          </when>
+          <when test="sortPath.name() == 'DEPARTMENT'">
+            d.department_code ASC, a.employee_code ASC, b.position_code ASC, a.created_at ASC
+          </when>
+          <otherwise>
+            a.employee_code ASC, b.position_code ASC, d.department_code ASC, a.created_at ASC
+          </otherwise>
+        </choose>
+      </otherwise>
+    </choose>
+    OFFSET (#{page} - 1) * #{size} FETCH NEXT #{size} ROWS ONLY
+  </select>
+
+  <select id="countEmployeeProfileList" resultType="long">
+    SELECT COUNT(*)
+    FROM employee.profile
+    WHERE employee_role != 'LEFT'
+  </select>
 </mapper>
