@@ -90,11 +90,16 @@ public class AuthController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "인증오류",
-                    content =
-                    @Content(
+                    description = "인증 오류",
+                    content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponseDoc.Unauthorized.class)
+                            schema = @Schema(
+                                    oneOf = {
+                                            ErrorResponseDoc.Unauthorized.class,
+                                            ErrorResponseDoc.ExpiredToken.class,
+                                            ErrorResponseDoc.InvalidToken.class
+                                    }
+                            )
                     )
             ),
             @ApiResponse(
@@ -188,12 +193,14 @@ public class AuthController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "인증 오류 (토큰 오류 또는 비밀번호 불일치)",
+                    description = "인증 오류",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(
                                     oneOf = {
                                             ErrorResponseDoc.Unauthorized.class,
+                                            ErrorResponseDoc.ExpiredToken.class,
+                                            ErrorResponseDoc.InvalidToken.class,
                                             ErrorResponseDoc.PasswordError.class
                                     }
                             )
@@ -239,12 +246,14 @@ public class AuthController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "인증 오류 (토큰 오류 또는 비밀번호 불일치)",
+                    description = "인증 오류",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(
                                     oneOf = {
                                             ErrorResponseDoc.Unauthorized.class,
+                                            ErrorResponseDoc.ExpiredToken.class,
+                                            ErrorResponseDoc.InvalidToken.class,
                                             ErrorResponseDoc.PasswordError.class
                                     }
                             )
@@ -282,12 +291,14 @@ public class AuthController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "인증 오류 (토큰 오류 또는 비밀번호 불일치)",
+                    description = "인증 오류",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(
                                     oneOf = {
                                             ErrorResponseDoc.Unauthorized.class,
+                                            ErrorResponseDoc.ExpiredToken.class,
+                                            ErrorResponseDoc.InvalidToken.class,
                                             ErrorResponseDoc.PasswordError.class
                                     }
                             )
