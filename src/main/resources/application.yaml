@@ -16,7 +16,7 @@ server:
 mybatis:
   mapper-locations:
     - classpath:db/mappers/*.xml
-  type-aliases-package: com.izen.module.auth.dto
+  type-aliases-package: com.izen.module.auth.dto, com.izen.module.employee.dto
   configuration:
     map-underscore-to-camel-case: true
 

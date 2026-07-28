@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Mapper
 public interface AuthMapper {
-    Optional<LoginVo> findLoginInfo(LoginRequestDto loginRequestDto);
+    Optional<LoginVo> findLoginInfo(LoginRequestDto dto);
 
     Optional<LoginVo> findRefreshInfo(@Param("accountId") Long accountId);
 
