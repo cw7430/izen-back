@@ -91,8 +91,87 @@
   </select>
 
   <select id="countEmployeeProfileList" resultType="long">
+    /* EmployeeMapper.countEmployeeProfileList */
     SELECT COUNT(*)
     FROM employee.profile
     WHERE employee_role != 'LEFT'
   </select>
+
+  <select id="findEmployeeProfileByEmployeeId" resultMap="employeeProfile">
+    /* EmployeeMapper.findEmployeeProfileByEmployeeId */
+    SELECT a.id,
+           a.employee_code,
+           a.employee_role,
+           a.employee_name,
+           b.position_code,
+           b.position_name,
+           d.department_code,
+           d.department_name,
+           c.team_code,
+           c.team_name,
+           e.phone,
+           e.email,
+           a.created_by,
+           f.employee_name AS createdEmployeeName,
+           a.updated_by,
+           g.employee_name AS updatedEmployeeName,
+           a.created_at,
+           a.updated_at,
+           a.deleted_at
+    FROM employee.profile a
+           LEFT JOIN employee.position b ON a.position_id = b.id
+           LEFT JOIN employee.team c ON a.team_id = c.id
+           LEFT JOIN employee.department d ON c.department_id = d.id
+           LEFT JOIN auth.account e ON a.id = e.id
+           LEFT JOIN employee.profile f ON a.created_by = f.id
+           LEFT JOIN employee.profile g ON a.updated_by = g.id
+    WHERE a.id = #{employeeId}
+  </select>
+
+  <select id="findEmployeeCode" resultType="EmployeeCodeResponseDto">
+    /* EmployeeMapper.findEmployeeCode */
+    <![CDATA[
+    WITH seq AS (SELECT NEXTVAL('employee.employee_code_seq') AS value)
+    SELECT 'EMP-' ||
+           CASE
+             WHEN value < 1000 THEN LPAD(value::TEXT, 3, '0')
+             ELSE value::TEXT
+             END AS employee_code
+    FROM seq;
+    ]]>
+  </select>
+
+  <insert id="createProfile">
+    /* EmployeeMapper.createProfile */
+    INSERT INTO employee.profile (id,
+                                  employee_code,
+                                  employee_name,
+                                  team_id,
+                                  position_id,
+                                  employee_role,
+                                  created_by,
+                                  updated_by,
+                                  created_at,
+                                  updated_at)
+    VALUES (#{employeeId},
+            #{employeeCode},
+            #{employeeName},
+            (SELECT id FROM employee.team WHERE team_code = #{teamCode}),
+            (SELECT id FROM employee.position WHERE position_code = #{positionCode}),
+            #{employeeRole},
+            #{createdBy},
+            #{updatedBy},
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP)
+  </insert>
+
+  <update id="updateProfile">
+    /* EmployeeMapper.updateProfile */
+    UPDATE employee.profile
+    SET employee_role = #{employeeRole},
+        team_id       = (SELECT id FROM employee.team WHERE team_code = #{teamCode}),
+        position_id   = (SELECT id FROM employee.position WHERE position_code = #{positionCode})
+    WHERE id = #{employeeId}
+  </update>
+
 </mapper>
