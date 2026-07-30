@@ -43,4 +43,11 @@ public interface AuthMapper {
             @Param("phone") String phone,
             @Param("email") String email
     );
+
+    int createAccount(
+            @Param("userName") String userName,
+            @Param("passwordHash") String passwordHash,
+            @Param("phone") String phone,
+            @Param("email") String email
+    );
 }

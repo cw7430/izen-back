@@ -29,11 +29,7 @@ public class AuthController {
             @ApiResponse(
                     responseCode = "200",
                     description = "로그인 성공",
-                    content =
-                    @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = LoginResponseDto.class)
-                    )
+                    useReturnTypeSchema = true
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -73,11 +69,7 @@ public class AuthController {
             @ApiResponse(
                     responseCode = "200",
                     description = "재발급 성공",
-                    content =
-                    @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = LoginResponseDto.class)
-                    )
+                    useReturnTypeSchema = true
             ),
             @ApiResponse(
                     responseCode = "400",

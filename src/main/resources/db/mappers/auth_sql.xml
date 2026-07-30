@@ -95,21 +95,21 @@
   </select>
 
   <update id="updateUserName">
-      /*AuthMapper.updateUserName*/
-      UPDATE
-          auth.account
-      SET user_name  = #{userName},
-          updated_at = CURRENT_TIMESTAMP
-      WHERE id = #{accountId}
+    /*AuthMapper.updateUserName*/
+    UPDATE
+      auth.account
+    SET user_name  = #{userName},
+        updated_at = CURRENT_TIMESTAMP
+    WHERE id = #{accountId}
   </update>
 
   <update id="updatePassword">
-      /*AuthMapper.updatePassword*/
-      UPDATE
-          auth.account
-      SET password_hash = #{passwordHash},
-          updated_at    = CURRENT_TIMESTAMP
-      WHERE id = #{accountId}
+    /*AuthMapper.updatePassword*/
+    UPDATE
+      auth.account
+    SET password_hash = #{passwordHash},
+        updated_at    = CURRENT_TIMESTAMP
+    WHERE id = #{accountId}
 
   </update>
 
@@ -122,4 +122,12 @@
         updated_at = CURRENT_TIMESTAMP
     WHERE id = #{accountId}
   </update>
+
+  <insert id="createAccount">
+    /*AuthMapper.createAccount*/
+    INSERT INTO auth.account
+    (user_name, password_hash, phone, email, auth_role, created_at, updated_at)
+    VALUES (#{userName}, #{passwordHash}, #{phone}, #{email}, 'USER'::auth.auth_role, CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP)
+  </insert>
 </mapper>
