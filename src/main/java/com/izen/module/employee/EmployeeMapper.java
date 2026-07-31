@@ -25,10 +25,11 @@ public interface EmployeeMapper {
 
     Optional<EmployeeProfileResponseDto> findEmployeeProfileByEmployeeId(@Param("employeeId") Long employeeId);
 
-    Optional<EmployeeCodeResponseDto> findEmployeeCode();
+    Optional<EmployeeCodeResponseDto> createEmployeeCode();
+
+    Optional<String> findEmployeeTeam(@Param("employeeId") Long employeeId);
 
     int createProfile(
-            @Param("employeeId") Long employeeId,
             @Param("employeeCode") String employeeCode,
             @Param("employeeName") String employeeName,
             @Param("teamCode") String teamCode,
@@ -42,6 +43,7 @@ public interface EmployeeMapper {
             @Param("employeeId") Long employeeId,
             @Param("teamCode") String teamCode,
             @Param("positionCode") String positionCode,
-            @Param("employeeRole") EmployeeRole employeeRole
+            @Param("employeeRole") EmployeeRole employeeRole,
+            @Param("updatedBy") Long updatedBy
     );
 }
