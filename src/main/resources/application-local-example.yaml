@@ -20,6 +20,9 @@ jwt:
     secret: # Secret Key
     expiration: 14d
 
+security:
+  api-key: # Secret Key
+
 logging:
   level:
     p6spy: INFO
