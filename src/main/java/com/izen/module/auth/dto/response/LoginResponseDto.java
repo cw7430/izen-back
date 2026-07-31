@@ -22,7 +22,7 @@ public record LoginResponseDto(
         String employeeName,
         @Schema(description = "계정 권한", example = "USER")
         AuthRole authRole,
-        @Schema(description = "직급 권한", example = "EMPLOYEE")
+        @Schema(description = "직책 권한", example = "EMPLOYEE")
         EmployeeRole employeeRole,
         @Schema(description = "부서 코드", example = "DPT100")
         String department,

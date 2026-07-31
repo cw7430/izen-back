@@ -24,7 +24,7 @@ public class EmployeeProfileVo {
     @Schema(description = "사번", example = "EMP001")
     private String employeeCode;
 
-    @Schema(description = "직급 권한", example = "EMPLOYEE")
+    @Schema(description = "직책 권한", example = "EMPLOYEE")
     private EmployeeRole employeeRole;
 
     @Schema(description = "사원 이름", example = "이사장")

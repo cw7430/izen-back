@@ -139,8 +139,8 @@
     WHERE a.id = #{employeeId}
   </select>
 
-  <select id="findEmployeeCode" resultType="EmployeeCodeResponseDto">
-    /* EmployeeMapper.findEmployeeCode */
+  <select id="createEmployeeCode" resultType="EmployeeCodeResponseDto">
+    /* EmployeeMapper.createEmployeeCode */
     <![CDATA[
     WITH seq AS (SELECT NEXTVAL('employee.employee_code_seq') AS value)
     SELECT 'EMP-' ||
@@ -150,6 +150,13 @@
              END AS employee_code
     FROM seq;
     ]]>
+  </select>
+
+  <select id="findEmployeeTeam" resultType="String">
+    SELECT b.team_code
+    FROM employee.profile a
+           JOIN employee.team b ON a.team_id = b.id
+    WHERE a.id = #{employeeId}
   </select>
 
   <insert id="createProfile">
@@ -164,7 +171,7 @@
                                   updated_by,
                                   created_at,
                                   updated_at)
-    VALUES (#{employeeId},
+    VALUES ((SELECT id FROM auth.account WHERE user_name = #{employeeCode}),
             #{employeeCode},
             #{employeeName},
             (SELECT id FROM employee.team WHERE team_code = #{teamCode}),
@@ -181,7 +188,9 @@
     UPDATE employee.profile
     SET employee_role = #{employeeRole},
         team_id       = (SELECT id FROM employee.team WHERE team_code = #{teamCode}),
-        position_id   = (SELECT id FROM employee.position WHERE position_code = #{positionCode})
+        position_id   = (SELECT id FROM employee.position WHERE position_code = #{positionCode}),
+        updated_by    = #{updatedBy},
+        updated_at    = CURRENT_TIMESTAMP
     WHERE id = #{employeeId}
   </update>
 
