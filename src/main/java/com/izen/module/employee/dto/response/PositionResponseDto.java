@@ -2,13 +2,15 @@ package com.izen.module.employee.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import tools.jackson.databind.annotation.JsonSerialize;
 import tools.jackson.databind.ser.std.ToStringSerializer;
 
 @Schema(name = "PositionResponse")
-@Getter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class PositionResponseDto {
     @Schema(description = "일련번호", example = "1", type = "string")
     @JsonSerialize(using = ToStringSerializer.class)

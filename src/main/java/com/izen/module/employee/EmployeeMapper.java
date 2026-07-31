@@ -1,8 +1,11 @@
 package com.izen.module.employee;
 
 import com.izen.module.employee.dto.request.EmployeeProfilesRequestDto;
+import com.izen.module.employee.dto.response.DepartmentResponseDto;
 import com.izen.module.employee.dto.response.EmployeeCodeResponseDto;
 import com.izen.module.employee.dto.response.EmployeeProfileResponseDto;
+import com.izen.module.employee.dto.response.PositionResponseDto;
+import com.izen.module.employee.dto.vo.EmployeeProfileVo;
 import com.izen.module.employee.type.EmployeeRole;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -12,7 +15,11 @@ import java.util.Optional;
 
 @Mapper
 public interface EmployeeMapper {
-    List<EmployeeProfileResponseDto> findEmployeeProfileList(EmployeeProfilesRequestDto dto);
+    List<EmployeeProfileVo> findEmployeeProfileList(EmployeeProfilesRequestDto dto);
+
+    List<DepartmentResponseDto> findDepartmentList();
+
+    List<PositionResponseDto> findPositionList();
 
     long countEmployeeProfileList();
 

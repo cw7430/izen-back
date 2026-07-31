@@ -1,8 +1,9 @@
 package com.izen.module.employee;
 
 import com.izen.common.api.doc.ErrorResponseDoc;
-import com.izen.common.api.response.PageResponse;
 import com.izen.module.employee.dto.request.EmployeeProfilesRequestDto;
+import com.izen.module.employee.dto.response.EmployeeCodeResponseDto;
+import com.izen.module.employee.dto.response.EmployeeProfileListResponseDto;
 import com.izen.module.employee.dto.response.EmployeeProfileResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -65,7 +66,7 @@ public class EmployeeController {
             )
     }
     )
-    public ResponseEntity<PageResponse<EmployeeProfileResponseDto>> getEmployeeProfileList(@ModelAttribute @Valid EmployeeProfilesRequestDto reqDto) {
+    public ResponseEntity<EmployeeProfileListResponseDto> getEmployeeProfileList(@ModelAttribute @Valid EmployeeProfilesRequestDto reqDto) {
         return ResponseEntity.ok(employeeService.getEmployeeProfileList(reqDto));
     }
 
@@ -112,5 +113,42 @@ public class EmployeeController {
     )
     public ResponseEntity<EmployeeProfileResponseDto> getEmployeeProfile(@PathVariable Long id) {
         return ResponseEntity.ok(employeeService.getEmployeeProfile(id));
+    }
+
+    @GetMapping("/employee-code")
+    @Operation(summary = "사번 생성")
+    @SecurityRequirement(name = "access-token")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "사번 생성 성공",
+                    useReturnTypeSchema = true
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(
+                                    oneOf = {
+                                            ErrorResponseDoc.Unauthorized.class,
+                                            ErrorResponseDoc.ExpiredToken.class,
+                                            ErrorResponseDoc.InvalidToken.class
+                                    }
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500", description = "서버 오류", content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDoc.InternalServerError.class)
+                    )
+            }
+            )
+    }
+    )
+    public ResponseEntity<EmployeeCodeResponseDto> getEmployeeCode() {
+        return ResponseEntity.ok(employeeService.getEmployeeCode());
     }
 }
