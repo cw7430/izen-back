@@ -24,6 +24,7 @@ public enum ResponseCode {
     /**
      * 403 Forbidden
      */
+    KEY_ERROR("KE", "접근 키가 잘못되었습니다.", HttpStatus.FORBIDDEN),
     FORBIDDEN("FB", "접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
 
     /**
