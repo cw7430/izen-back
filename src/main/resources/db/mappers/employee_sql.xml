@@ -1,36 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.izen.module.employee.EmployeeMapper">
-  <resultMap id="employeeProfile" type="EmployeeProfileResponseDto">
-    <constructor>
-      <arg column="id" name="employeeId" javaType="Long"/>
-      <arg column="employee_code" name="employeeCode" javaType="String"/>
-      <arg column="employee_role" name="employeeRole"
-           javaType="com.izen.module.employee.type.EmployeeRole"/>
-      <arg column="employee_name" name="employeeName" javaType="String"/>
-      <arg column="position_code" name="positionCode" javaType="String"/>
-      <arg column="position_name" name="positionName" javaType="String"/>
-      <arg column="department_code" name="departmentCode" javaType="String"/>
-      <arg column="department_name" name="departmentName" javaType="String"/>
-      <arg column="team_code" name="teamCode" javaType="String"/>
-      <arg column="team_name" name="teamName" javaType="String"/>
-      <arg column="phone" name="phone" javaType="String"/>
-      <arg column="email" name="email" javaType="String"/>
-      <arg column="created_by" name="createdBy" javaType="Long"/>
-      <arg column="createdEmployeeName" name="createdEmployeeName" javaType="String"/>
-      <arg column="updated_by" name="updatedBy" javaType="Long"/>
-      <arg column="updatedEmployeeName" name="updatedEmployeeName" javaType="String"/>
-      <arg column="created_at" name="createdAt" javaType="java.time.Instant"/>
-      <arg column="updated_at" name="updatedAt" javaType="java.time.Instant"/>
-      <arg column="deleted_at" name="deletedAt" javaType="java.time.Instant"/>
-    </constructor>
+
+  <resultMap id="department" type="DepartmentResponseDto">
+    <id column="departmentId" property="departmentId"/>
+    <result column="department_code" property="departmentCode"/>
+    <result column="department_name" property="departmentName"/>
+    <collection property="teams" ofType="TeamResponseDto">
+      <id column="teamId" property="teamId"/>
+      <result column="team_code" property="teamCode"/>
+      <result column="team_name" property="teamName"/>
+    </collection>
   </resultMap>
 
   <select id="findEmployeeProfileList" parameterType="EmployeeProfilesRequestDto"
-          resultMap="employeeProfile">
+          resultType="EmployeeProfileVo">
     /* EmployeeMapper.findEmployeeProfileList */
     SELECT
-    a.id,
+    a.id AS employeeId,
     a.employee_code,
     a.employee_role,
     a.employee_name,
@@ -90,6 +77,30 @@
     OFFSET (#{page} - 1) * #{size} FETCH NEXT #{size} ROWS ONLY
   </select>
 
+  <select id="findDepartmentList" resultMap="department">
+    /* EmployeeMapper.findDepartmentList */
+    SELECT a.id AS departmentId,
+           a.department_code,
+           a.department_name,
+           b.id AS teamId,
+           b.team_code,
+           b.team_name
+    FROM employee.department a
+           LEFT JOIN employee.team b ON a.id = b.department_id
+    ORDER BY a.department_code, b.team_code
+  </select>
+
+  <select id="findPositionList" resultType="PositionResponseDto">
+    /* EmployeeMapper.findPositionList */
+    SELECT id AS positionId,
+           position_code,
+           position_name,
+           basic_salary,
+           incentive_salary
+    FROM employee.position
+    ORDER BY position_code
+  </select>
+
   <select id="countEmployeeProfileList" resultType="long">
     /* EmployeeMapper.countEmployeeProfileList */
     SELECT COUNT(*)
@@ -97,9 +108,9 @@
     WHERE employee_role != 'LEFT'
   </select>
 
-  <select id="findEmployeeProfileByEmployeeId" resultMap="employeeProfile">
+  <select id="findEmployeeProfileByEmployeeId" resultType="EmployeeProfileResponseDto">
     /* EmployeeMapper.findEmployeeProfileByEmployeeId */
-    SELECT a.id,
+    SELECT a.id            AS employeeId,
            a.employee_code,
            a.employee_role,
            a.employee_name,
