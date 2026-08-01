@@ -126,8 +126,7 @@
   <insert id="createAccount">
     /*AuthMapper.createAccount*/
     INSERT INTO auth.account
-    (user_name, password_hash, phone, email, auth_role, created_at, updated_at)
-    VALUES (#{userName}, #{passwordHash}, #{phone}, #{email}, 'USER'::auth.auth_role, CURRENT_TIMESTAMP,
-            CURRENT_TIMESTAMP)
+      (user_name, password_hash, phone, email, auth_role)
+    VALUES (#{userName}, #{passwordHash}, #{phone}, #{email}, 'USER'::auth.auth_role)
   </insert>
 </mapper>

@@ -168,9 +168,7 @@
                                   position_id,
                                   employee_role,
                                   created_by,
-                                  updated_by,
-                                  created_at,
-                                  updated_at)
+                                  updated_by)
     VALUES ((SELECT id FROM auth.account WHERE user_name = #{employeeCode}),
             #{employeeCode},
             #{employeeName},
@@ -178,9 +176,7 @@
             (SELECT id FROM employee.position WHERE position_code = #{positionCode}),
             #{employeeRole},
             #{createdBy},
-            #{updatedBy},
-            CURRENT_TIMESTAMP,
-            CURRENT_TIMESTAMP)
+            #{updatedBy})
   </insert>
 
   <update id="updateProfile">
