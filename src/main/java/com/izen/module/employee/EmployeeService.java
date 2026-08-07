@@ -49,7 +49,7 @@ public class EmployeeService {
         List<PositionResponseDto> positionList = employeeMapper.findPositionList();
 
         log.info("Employee Profiles requested by account ID: {}", accountId);
-        return new EmployeeProfileListResponseDto(pagedEmployeeProfileList, departmentList, positionList);
+        return new EmployeeProfileListResponseDto(pagedEmployeeProfileList, departmentList, positionList, ALLOWED_PROFILE_TEAMS);
     }
 
     public EmployeeProfileResponseDto getEmployeeProfile(Long id) {
@@ -60,6 +60,7 @@ public class EmployeeService {
         List<PositionResponseDto> positionList = employeeMapper.findPositionList();
         employeeProfile.setDepartments(departmentList);
         employeeProfile.setPositions(positionList);
+        employeeProfile.setAllowedProfileTeams(ALLOWED_PROFILE_TEAMS);
         log.info("Employee Profile requested by account ID: {}", accountId);
         log.info("employee ID: {}", id);
         return employeeProfile;
