@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Set;
 
 @Schema(name = "EmployeeProfileListResponse")
 @Getter
@@ -20,4 +21,7 @@ public class EmployeeProfileListResponseDto {
 
     @ArraySchema(schema = @Schema(implementation = PositionResponseDto.class))
     private List<PositionResponseDto> positions;
+
+    @Schema(description = "허용된 팀", example = "[\"TM100\", \"TM200\"]")
+    private Set<String> allowedProfileTeams;
 }
