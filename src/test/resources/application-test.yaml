@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/izen_test
+    username: test_user
+    password: test1234
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations:
+      - classpath:db/migration/common
+      - classpath:db/migration/local
+
+
+jwt:
+  access:
+    secret: test1test2test3test4test5test6test7test8test9test10test11
+    expiration: 30m
+  refresh:
+    secret: test11test10test9test8test7test6test5test4test3test2test1
+    expiration: 14d
+
+
+security:
+  api-key: x-api-key_test11test10test9test8test7test6test5test4test3test2test1
+
+logging:
+  level:
+    p6spy: INFO
