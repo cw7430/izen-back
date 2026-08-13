@@ -97,6 +97,18 @@ public class ErrorResponseDoc {
     }
 
     /**
+     * 403 Forbidden - KeyError
+     */
+    @Getter
+    public static class KeyError {
+        @Schema(example = "KE")
+        private final String code = ResponseCode.KEY_ERROR.getCode();
+
+        @Schema(example = "접근 권한이 없습니다.")
+        private final String message = ResponseCode.KEY_ERROR.getMessage();
+    }
+
+    /**
      * 404 Not Found - Resource Not Found
      */
     @Getter

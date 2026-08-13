@@ -59,6 +59,14 @@ public class EmployeeController {
                     )
             ),
             @ApiResponse(
+                    responseCode = "403", description = "Api Key 오류", content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDoc.KeyError.class)
+                    )
+            }
+            ),
+            @ApiResponse(
                     responseCode = "500", description = "서버 오류", content = {
                     @Content(
                             mediaType = "application/json",
@@ -94,6 +102,14 @@ public class EmployeeController {
                                     }
                             )
                     )
+            ),
+            @ApiResponse(
+                    responseCode = "403", description = "Api Key 오류", content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDoc.KeyError.class)
+                    )
+            }
             ),
             @ApiResponse(
                     responseCode = "404", description = "없는 요소", content = {
@@ -145,7 +161,12 @@ public class EmployeeController {
                     description = "권한 오류",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponseDoc.Forbidden.class)
+                            schema = @Schema(
+                                    oneOf = {
+                                            ErrorResponseDoc.Forbidden.class,
+                                            ErrorResponseDoc.KeyError.class
+                                    }
+                            )
                     )
             ),
             @ApiResponse(
@@ -197,7 +218,12 @@ public class EmployeeController {
                     description = "권한 오류",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponseDoc.Forbidden.class)
+                            schema = @Schema(
+                                    oneOf = {
+                                            ErrorResponseDoc.Forbidden.class,
+                                            ErrorResponseDoc.KeyError.class
+                                    }
+                            )
                     )
             ),
             @ApiResponse(
@@ -249,7 +275,12 @@ public class EmployeeController {
                     description = "권한 오류",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponseDoc.Forbidden.class)
+                            schema = @Schema(
+                                    oneOf = {
+                                            ErrorResponseDoc.Forbidden.class,
+                                            ErrorResponseDoc.KeyError.class
+                                    }
+                            )
                     )
             ),
             @ApiResponse(

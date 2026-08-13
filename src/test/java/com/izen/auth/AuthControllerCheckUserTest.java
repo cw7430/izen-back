@@ -51,7 +51,7 @@ public class AuthControllerCheckUserTest extends BaseIntegrationTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("VE"))
-                .andExpect(jsonPath("$.message").isNotEmpty());;
+                .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
     @Test
@@ -67,6 +67,21 @@ public class AuthControllerCheckUserTest extends BaseIntegrationTest {
                 .andDo(print())
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.code").value("DR"))
-                .andExpect(jsonPath("$.message").isNotEmpty());;
+                .andExpect(jsonPath("$.message").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("아이디 중복체크 - Api Key 오류")
+    void checkUserFailWithKeyError() throws Exception {
+        CheckUserRequestDto data = new CheckUserRequestDto("user1234");
+        mockMvc.perform(
+                        post("/api/v1/auth/check-user")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(data))
+                )
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("KE"))
+                .andExpect(jsonPath("$.message").isNotEmpty());
     }
 }

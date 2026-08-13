@@ -49,6 +49,14 @@ public class AuthController {
             }
             ),
             @ApiResponse(
+                    responseCode = "403", description = "Api Key 오류", content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDoc.KeyError.class)
+                    )
+            }
+            ),
+            @ApiResponse(
                     responseCode = "500", description = "서버 오류", content = {
                     @Content(
                             mediaType = "application/json",
@@ -79,6 +87,14 @@ public class AuthController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponseDoc.BadRequest.class)
                     )
+            ),
+            @ApiResponse(
+                    responseCode = "403", description = "Api Key 오류", content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDoc.KeyError.class)
+                    )
+            }
             ),
             @ApiResponse(
                     responseCode = "401",
@@ -146,6 +162,14 @@ public class AuthController {
                     )
             ),
             @ApiResponse(
+                    responseCode = "403", description = "Api Key 오류", content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDoc.KeyError.class)
+                    )
+            }
+            ),
+            @ApiResponse(
                     responseCode = "409",
                     description = "아이디 중복",
                     content = @Content(
@@ -197,6 +221,14 @@ public class AuthController {
                                     }
                             )
                     )
+            ),
+            @ApiResponse(
+                    responseCode = "403", description = "Api Key 오류", content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDoc.KeyError.class)
+                    )
+            }
             ),
             @ApiResponse(
                     responseCode = "409",
@@ -252,6 +284,14 @@ public class AuthController {
                     )
             ),
             @ApiResponse(
+                    responseCode = "403", description = "Api Key 오류", content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDoc.KeyError.class)
+                    )
+            }
+            ),
+            @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
                     content = @Content(
@@ -295,6 +335,14 @@ public class AuthController {
                                     }
                             )
                     )
+            ),
+            @ApiResponse(
+                    responseCode = "403", description = "Api Key 오류", content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDoc.KeyError.class)
+                    )
+            }
             ),
             @ApiResponse(
                     responseCode = "500",
