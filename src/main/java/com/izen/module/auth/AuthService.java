@@ -115,7 +115,7 @@ public class AuthService {
         String passwordHash = authMapper.findPasswordHash(accountId)
                 .orElseThrow(() -> new CustomException(ResponseCode.UNAUTHORIZED));
 
-        if (passwordEncoder.matches(reqDto.password(), passwordHash)) {
+        if (!passwordEncoder.matches(reqDto.password(), passwordHash)) {
             throw new CustomException(ResponseCode.PASSWORD_ERROR);
         }
 
@@ -133,7 +133,7 @@ public class AuthService {
         String passwordHash = authMapper.findPasswordHash(accountId)
                 .orElseThrow(() -> new CustomException(ResponseCode.UNAUTHORIZED));
 
-        if (passwordEncoder.matches(reqDto.prevPassword(), passwordHash)) {
+        if (!passwordEncoder.matches(reqDto.prevPassword(), passwordHash)) {
             throw new CustomException(ResponseCode.PASSWORD_ERROR);
         }
 
@@ -151,7 +151,7 @@ public class AuthService {
         String passwordHash = authMapper.findPasswordHash(accountId)
                 .orElseThrow(() -> new CustomException(ResponseCode.UNAUTHORIZED));
 
-        if (passwordEncoder.matches(reqDto.password(), passwordHash)) {
+        if (!passwordEncoder.matches(reqDto.password(), passwordHash)) {
             throw new CustomException(ResponseCode.PASSWORD_ERROR);
         }
 

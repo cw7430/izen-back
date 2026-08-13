@@ -33,11 +33,12 @@ public class AuthControllerRefreshTest extends BaseIntegrationTest {
                 "EMP003",
                 false
         );
+        String refreshToken = authTestUtil.getTestToken(loginData).refreshToken();
         RefreshRequestDto refreshData = new RefreshRequestDto(false);
         mockMvc.perform(
                         post("/api/v1/auth/refresh")
                                 .header("X-API-Key", authTestUtil.getTestApiKey())
-                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + authTestUtil.getTestToken(loginData).refreshToken())
+                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + refreshToken)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(refreshData))
                 )
@@ -77,6 +78,28 @@ public class AuthControllerRefreshTest extends BaseIntegrationTest {
                 .andDo(print())
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.code").value("IT"))
+                .andExpect(jsonPath("$.message").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("토큰 재발급 - Api Key 오류")
+    void refreshFailWithKeyError() throws Exception {
+        LoginRequestDto loginData = new LoginRequestDto(
+                "EMP003",
+                "EMP003",
+                false
+        );
+        String refreshToken = authTestUtil.getTestToken(loginData).refreshToken();
+        RefreshRequestDto refreshData = new RefreshRequestDto(false);
+        mockMvc.perform(
+                        post("/api/v1/auth/refresh")
+                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + refreshToken)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(refreshData))
+                )
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("KE"))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
