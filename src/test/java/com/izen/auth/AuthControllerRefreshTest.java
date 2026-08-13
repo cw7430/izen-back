@@ -7,18 +7,15 @@ import com.izen.module.auth.dto.request.RefreshRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
-@Transactional
 public class AuthControllerRefreshTest extends BaseIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -44,9 +41,43 @@ public class AuthControllerRefreshTest extends BaseIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(refreshData))
                 )
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").isNotEmpty())
                 .andExpect(jsonPath("$.refreshToken").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("토큰 재발급 - 인증 오류")
+    void refreshFailWithUnauthorized() throws Exception {
+        RefreshRequestDto refreshData = new RefreshRequestDto(false);
+        mockMvc.perform(
+                        post("/api/v1/auth/refresh")
+                                .header("X-API-Key", authTestUtil.getTestApiKey())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(refreshData))
+                )
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value("UA"))
+                .andExpect(jsonPath("$.message").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("토큰 재발급 - 잘못 된 토큰")
+    void refreshFailWithInvalidToken() throws Exception {
+        RefreshRequestDto refreshData = new RefreshRequestDto(false);
+        mockMvc.perform(
+                        post("/api/v1/auth/refresh")
+                                .header("X-API-Key", authTestUtil.getTestApiKey())
+                                .header(HttpHeaders.AUTHORIZATION, "Bearer 123dj3w989kp2ekohoiysofhawioerq87retreheiogujigbydfggauid")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(refreshData))
+                )
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value("IT"))
+                .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
 }

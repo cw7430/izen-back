@@ -6,17 +6,14 @@ import com.izen.module.auth.dto.request.LoginRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
-@Transactional
 public class AuthControllerLoginTest extends BaseIntegrationTest {
 
     @Autowired
@@ -41,13 +38,14 @@ public class AuthControllerLoginTest extends BaseIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(data))
                 )
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").isNotEmpty())
                 .andExpect(jsonPath("$.refreshToken").isNotEmpty());
     }
 
     @Test
-    @DisplayName("로그인 - 잘못 된 요청")
+    @DisplayName("로그인 - 잘 못된 입력 값")
     void loginFailWithValidationError() throws Exception {
         LoginRequestDto data = new LoginRequestDto(
                 null,
@@ -61,6 +59,7 @@ public class AuthControllerLoginTest extends BaseIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(data))
                 )
+                .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("VE"))
                 .andExpect(jsonPath("$.message").isNotEmpty());
@@ -81,6 +80,7 @@ public class AuthControllerLoginTest extends BaseIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(data))
                 )
+                .andDo(print())
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.code").value("LGE"))
                 .andExpect(jsonPath("$.message").isNotEmpty());
@@ -101,6 +101,7 @@ public class AuthControllerLoginTest extends BaseIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(data))
                 )
+                .andDo(print())
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value("KE"))
                 .andExpect(jsonPath("$.message").isNotEmpty());
