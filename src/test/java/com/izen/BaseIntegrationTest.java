@@ -1,11 +1,13 @@
 package com.izen;
 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(scripts = {"/clean_schema.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
+@AutoConfigureMockMvc
+@Transactional
 public class BaseIntegrationTest {
 }
