@@ -55,7 +55,7 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String apiKeyHeader = request.getHeader("X-API-Key");
 
-        if (apiKeyHeader != null && !secretApiKey.equals(apiKeyHeader)) {
+        if (!secretApiKey.equals(apiKeyHeader)) {
             ResponseCode responseCode = ResponseCode.KEY_ERROR;
 
             ErrorResponseDto errorResponse = ErrorResponseDto.from(responseCode);
