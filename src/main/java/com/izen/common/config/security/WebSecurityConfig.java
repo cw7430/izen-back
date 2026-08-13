@@ -66,7 +66,7 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/swagger-ui/**", "/api-docs/**", "/api/v1/health-check",
                                 "/api/v1/auth/login", "/api/v1/auth/logout", "/api/v1/auth/check-user",
-                                "/api/v1/auth/refresh", "/api/v1/auth/account"
+                                "/api/v1/auth/refresh"
                         ).permitAll()
                         .requestMatchers("/api/v1/auth/account", "/api/v1/auth/password", "/api/v1/auth/user-name",
                                 "/api/v1/hr/profiles", "/api/v1/hr/employee-code").hasAnyRole("USER", "ADMIN")
