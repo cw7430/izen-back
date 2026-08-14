@@ -5,10 +5,7 @@ import com.izen.common.api.type.ResponseCode;
 import com.izen.module.auth.dto.request.LoginRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,13 +19,7 @@ public class AuthControllerLoginTest extends BaseIntegrationTest {
                 "EMP003",
                 false
         );
-        mockMvc.perform(
-                        post("/api/v1/auth/login")
-                                .header("X-API-Key", authTestUtil.getTestApiKey())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(data))
-                )
-                .andDo(print())
+        post("/api/v1/auth/login").key().body(data).send()
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").isNotEmpty())
                 .andExpect(jsonPath("$.refreshToken").isNotEmpty());
@@ -43,13 +34,7 @@ public class AuthControllerLoginTest extends BaseIntegrationTest {
                 false
         );
 
-        mockMvc.perform(
-                        post("/api/v1/auth/login")
-                                .header("X-API-Key", authTestUtil.getTestApiKey())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(data))
-                )
-                .andDo(print())
+        post("/api/v1/auth/login").key().body(data).send()
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value(ResponseCode.VALIDATION_ERROR.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
@@ -64,13 +49,7 @@ public class AuthControllerLoginTest extends BaseIntegrationTest {
                 false
         );
 
-        mockMvc.perform(
-                        post("/api/v1/auth/login")
-                                .header("X-API-Key", authTestUtil.getTestApiKey())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(data))
-                )
-                .andDo(print())
+        post("/api/v1/auth/login").key().body(data).send()
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.code").value(ResponseCode.LOGIN_ERROR.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
@@ -80,18 +59,12 @@ public class AuthControllerLoginTest extends BaseIntegrationTest {
     @DisplayName("로그인 - 잘못 된 API-KEY")
     void loginFailWithKeyError() throws Exception {
         LoginRequestDto data = new LoginRequestDto(
-                "EMP002",
-                "EMP002",
+                "EMP003",
+                "EMP003",
                 false
         );
 
-        mockMvc.perform(
-                        post("/api/v1/auth/login")
-                                .header("X-API-Key", "api-key")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(data))
-                )
-                .andDo(print())
+        post("/api/v1/auth/login").body(data).send()
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value(ResponseCode.KEY_ERROR.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
