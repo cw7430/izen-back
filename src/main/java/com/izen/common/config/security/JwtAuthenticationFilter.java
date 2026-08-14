@@ -1,5 +1,6 @@
 package com.izen.common.config.security;
 
+import com.izen.common.api.exception.CustomException;
 import com.izen.common.config.security.type.Role;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -48,6 +49,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 setAuthentication(claims);
             }
 
+        } catch (CustomException e) {
+            request.setAttribute("exception", e.getResponseCode());
         } catch (Exception e) {
             request.setAttribute("exception", e);
         }

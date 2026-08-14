@@ -3,10 +3,7 @@ package com.izen.common.config.security;
 import com.izen.common.api.exception.CustomException;
 import com.izen.common.api.type.ResponseCode;
 import com.izen.common.config.security.type.TokenResponseClaim;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +77,7 @@ public class JwtProvider {
                     .getPayload();
         } catch (ExpiredJwtException e) {
             throw new CustomException(ResponseCode.EXPIRED_TOKEN);
-        } catch (MalformedJwtException e) {
+        } catch (JwtException | IllegalArgumentException e) {
             throw new CustomException(ResponseCode.INVALID_TOKEN);
         }
     }

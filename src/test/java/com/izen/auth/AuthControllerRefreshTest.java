@@ -1,15 +1,12 @@
 package com.izen.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.izen.BaseIntegrationTest;
 import com.izen.module.auth.dto.request.LoginRequestDto;
 import com.izen.module.auth.dto.request.RefreshRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -17,13 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AuthControllerRefreshTest extends BaseIntegrationTest {
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private AuthTestUtil authTestUtil;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName("토큰 재발급 - 성공")

@@ -1,15 +1,12 @@
 package com.izen.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.izen.BaseIntegrationTest;
 import com.izen.module.auth.dto.request.LoginRequestDto;
 import com.izen.module.auth.dto.request.UpdateUserNameRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -17,13 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AuthControllerUpdateUserNameTest extends BaseIntegrationTest {
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private AuthTestUtil authTestUtil;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName("아이디 변경 - 성공")
@@ -70,6 +60,25 @@ public class AuthControllerUpdateUserNameTest extends BaseIntegrationTest {
                 ).andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("VE"))
+                .andExpect(jsonPath("$.message").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("아이디 변경 - 토큰 오류")
+    void updateUserNameFailWithInvalidToken() throws Exception {
+        UpdateUserNameRequestDto updateData = new UpdateUserNameRequestDto(
+                "updateuser123",
+                "EMP003"
+        );
+        mockMvc.perform(
+                        patch("/api/v1/auth/user-name")
+                                .header("X-API-Key", authTestUtil.getTestApiKey())
+                                .header(HttpHeaders.AUTHORIZATION, "Bearer 123dj3w989kp2ekohoiysofhawioerq87retreheiogujigbydfggauid")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(updateData))
+                ).andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value("IT"))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
