@@ -64,6 +64,25 @@ public class AuthControllerUpdateUserNameTest extends BaseIntegrationTest {
     }
 
     @Test
+    @DisplayName("아이디 변경 - 토큰 오류")
+    void updateUserNameFailWithInvalidToken() throws Exception {
+        UpdateUserNameRequestDto updateData = new UpdateUserNameRequestDto(
+                "updateuser123",
+                "EMP003"
+        );
+        mockMvc.perform(
+                        patch("/api/v1/auth/user-name")
+                                .header("X-API-Key", authTestUtil.getTestApiKey())
+                                .header(HttpHeaders.AUTHORIZATION, "Bearer 123dj3w989kp2ekohoiysofhawioerq87retreheiogujigbydfggauid")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(updateData))
+                ).andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value("IT"))
+                .andExpect(jsonPath("$.message").isNotEmpty());
+    }
+
+    @Test
     @DisplayName("아이디 변경 - 인증 오류")
     void updateUserNameFailWithUnauthorized() throws Exception {
         UpdateUserNameRequestDto updateData = new UpdateUserNameRequestDto(
