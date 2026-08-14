@@ -1,6 +1,7 @@
 package com.izen.auth;
 
 import com.izen.BaseIntegrationTest;
+import com.izen.common.api.type.ResponseCode;
 import com.izen.module.auth.dto.request.LoginRequestDto;
 import com.izen.module.auth.dto.request.UpdateUserNameRequestDto;
 import org.junit.jupiter.api.DisplayName;
@@ -59,12 +60,12 @@ public class AuthControllerUpdateUserNameTest extends BaseIntegrationTest {
                                 .content(objectMapper.writeValueAsString(updateData))
                 ).andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("VE"))
+                .andExpect(jsonPath("$.code").value(ResponseCode.VALIDATION_ERROR.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
     @Test
-    @DisplayName("아이디 변경 - 토큰 오류")
+    @DisplayName("아이디 변경 - 잘못 된 토큰")
     void updateUserNameFailWithInvalidToken() throws Exception {
         UpdateUserNameRequestDto updateData = new UpdateUserNameRequestDto(
                 "updateuser123",
@@ -78,7 +79,32 @@ public class AuthControllerUpdateUserNameTest extends BaseIntegrationTest {
                                 .content(objectMapper.writeValueAsString(updateData))
                 ).andDo(print())
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value("IT"))
+                .andExpect(jsonPath("$.code").value(ResponseCode.INVALID_TOKEN.getCode()))
+                .andExpect(jsonPath("$.message").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("아이디 변경 - 만료 된 토큰")
+    void updateUserNameFailWithExpiredToken() throws Exception {
+        LoginRequestDto loginData = new LoginRequestDto(
+                "EMP003",
+                "EMP003",
+                false
+        );
+        String accessToken = authTestUtil.generateExpiredAccessToken(loginData);
+        UpdateUserNameRequestDto updateData = new UpdateUserNameRequestDto(
+                "updateuser123",
+                "EMP003"
+        );
+        mockMvc.perform(
+                        patch("/api/v1/auth/user-name")
+                                .header("X-API-Key", authTestUtil.getTestApiKey())
+                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(updateData))
+                ).andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value(ResponseCode.EXPIRED_TOKEN.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
@@ -96,7 +122,7 @@ public class AuthControllerUpdateUserNameTest extends BaseIntegrationTest {
                                 .content(objectMapper.writeValueAsString(updateData))
                 ).andDo(print())
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value("UA"))
+                .andExpect(jsonPath("$.code").value(ResponseCode.UNAUTHORIZED.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
@@ -121,7 +147,7 @@ public class AuthControllerUpdateUserNameTest extends BaseIntegrationTest {
                                 .content(objectMapper.writeValueAsString(updateData))
                 ).andDo(print())
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value("PWE"))
+                .andExpect(jsonPath("$.code").value(ResponseCode.PASSWORD_ERROR.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
@@ -146,7 +172,7 @@ public class AuthControllerUpdateUserNameTest extends BaseIntegrationTest {
                                 .content(objectMapper.writeValueAsString(updateData))
                 ).andDo(print())
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.code").value("KE"))
+                .andExpect(jsonPath("$.code").value(ResponseCode.KEY_ERROR.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
@@ -171,7 +197,7 @@ public class AuthControllerUpdateUserNameTest extends BaseIntegrationTest {
                                 .content(objectMapper.writeValueAsString(updateData))
                 ).andDo(print())
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.code").value("DR"))
+                .andExpect(jsonPath("$.code").value(ResponseCode.DUPLICATE_RESOURCE.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 }

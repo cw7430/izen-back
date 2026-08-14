@@ -1,6 +1,7 @@
 package com.izen.auth;
 
 import com.izen.BaseIntegrationTest;
+import com.izen.common.api.type.ResponseCode;
 import com.izen.module.auth.dto.request.LoginRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ public class AuthControllerLoginTest extends BaseIntegrationTest {
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("VE"))
+                .andExpect(jsonPath("$.code").value(ResponseCode.VALIDATION_ERROR.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
@@ -71,7 +72,7 @@ public class AuthControllerLoginTest extends BaseIntegrationTest {
                 )
                 .andDo(print())
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value("LGE"))
+                .andExpect(jsonPath("$.code").value(ResponseCode.LOGIN_ERROR.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
@@ -92,7 +93,7 @@ public class AuthControllerLoginTest extends BaseIntegrationTest {
                 )
                 .andDo(print())
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.code").value("KE"))
+                .andExpect(jsonPath("$.code").value(ResponseCode.KEY_ERROR.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 }

@@ -1,6 +1,7 @@
 package com.izen.auth;
 
 import com.izen.BaseIntegrationTest;
+import com.izen.common.api.type.ResponseCode;
 import com.izen.module.auth.dto.request.LoginRequestDto;
 import com.izen.module.auth.dto.request.RefreshRequestDto;
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +51,7 @@ public class AuthControllerRefreshTest extends BaseIntegrationTest {
                 )
                 .andDo(print())
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value("UA"))
+                .andExpect(jsonPath("$.code").value(ResponseCode.UNAUTHORIZED.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
@@ -67,8 +68,32 @@ public class AuthControllerRefreshTest extends BaseIntegrationTest {
                 )
                 .andDo(print())
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value("IT"))
+                .andExpect(jsonPath("$.code").value(ResponseCode.INVALID_TOKEN.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("토큰 재발급 - 만료 된 토큰")
+    void refreshFailWithExpiredToken() throws Exception {
+        LoginRequestDto loginData = new LoginRequestDto(
+                "EMP003",
+                "EMP003",
+                false
+        );
+        RefreshRequestDto refreshData = new RefreshRequestDto(false);
+        String refreshToken = authTestUtil.generateExpiredRefreshToken(loginData);
+        mockMvc.perform(
+                        post("/api/v1/auth/refresh")
+                                .header("X-API-Key", authTestUtil.getTestApiKey())
+                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + refreshToken)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(refreshData))
+                )
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value(ResponseCode.EXPIRED_TOKEN.getCode()))
+                .andExpect(jsonPath("$.message").isNotEmpty());
+
     }
 
     @Test
@@ -89,7 +114,7 @@ public class AuthControllerRefreshTest extends BaseIntegrationTest {
                 )
                 .andDo(print())
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.code").value("KE"))
+                .andExpect(jsonPath("$.code").value(ResponseCode.KEY_ERROR.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
