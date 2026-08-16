@@ -3,6 +3,7 @@ package com.izen;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.izen.auth.AuthTestUtil;
+import com.izen.module.auth.dto.request.LoginRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -30,6 +31,13 @@ public abstract class BaseIntegrationTest {
     protected final ObjectMapper objectMapper = new ObjectMapper()
             .findAndRegisterModules()
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+    protected static final String BASE_URL = "/api/v1";
+    protected static final LoginRequestDto defaultLoginData = new LoginRequestDto(
+            "EMP003",
+            "EMP003",
+            false
+    );
 
     private RequestBuilder request(HttpMethod method, String url) {
         return new RequestBuilder(method, url);
