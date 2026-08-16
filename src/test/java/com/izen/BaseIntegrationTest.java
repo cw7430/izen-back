@@ -38,6 +38,7 @@ public abstract class BaseIntegrationTest {
             "EMP003",
             false
     );
+    protected static final String INVALID_TOKEN = "123dj3w989kp2ekohoiysofhawioerq87retreheiogujigbydfggauid";
 
     private RequestBuilder request(HttpMethod method, String url) {
         return new RequestBuilder(method, url);

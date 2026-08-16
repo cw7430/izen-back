@@ -22,7 +22,7 @@ public class AuthControllerLogoutTest extends AuthControllerTest {
     @Test
     @DisplayName("로그아웃 - 잘못 된 토큰으로 성공")
     void logoutSuccessWithInvalidToken() throws Exception {
-        LogoutRequestDto data = new LogoutRequestDto("123dj3w989kp2ekohoiysofhawioerq87retreheiogujigbydfggauid");
+        LogoutRequestDto data = new LogoutRequestDto(INVALID_TOKEN);
         post(URL)
                 .key().body(data).send()
                 .andExpect(status().isNoContent());

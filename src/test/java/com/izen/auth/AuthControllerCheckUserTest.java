@@ -12,46 +12,45 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AuthControllerCheckUserTest extends AuthControllerTest {
 
     private static final String URL = AUTH_URL + "/check-user";
+    private static final CheckUserRequestDto DATA = new CheckUserRequestDto("user1234");
+    private static final CheckUserRequestDto INVALID_DATA = new CheckUserRequestDto("123");
+    private static final CheckUserRequestDto DUPLICATE_DATA = new CheckUserRequestDto("EMP003");
 
     @Test
     @DisplayName("아이디 중복체크 - 성공")
     void checkUserSuccess() throws Exception {
-        CheckUserRequestDto data = new CheckUserRequestDto("user1234");
         post(URL)
-                .key().body(data).send()
+                .key().body(DATA).send()
                 .andExpect(status().isNoContent());
     }
 
     @Test
     @DisplayName("아이디 중복체크 - 잘 못된 입력 값")
     void checkUserFailWithValidationError() throws Exception {
-        CheckUserRequestDto data = new CheckUserRequestDto("123");
         post(URL)
-                .key().body(data).send()
+                .key().body(INVALID_DATA).send()
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value(ResponseCode.VALIDATION_ERROR.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
     @Test
-    @DisplayName("아이디 중복체크 - 아이디 중복")
-    void checkUserFailWithDuplicateResource() throws Exception {
-        CheckUserRequestDto data = new CheckUserRequestDto("EMP003");
+    @DisplayName("아이디 중복체크 - Api Key 오류")
+    void checkUserFailWithKeyError() throws Exception {
         post(URL)
-                .key().body(data).send()
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.code").value(ResponseCode.DUPLICATE_RESOURCE.getCode()))
+                .body(DATA).send()
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value(ResponseCode.KEY_ERROR.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 
     @Test
-    @DisplayName("아이디 중복체크 - Api Key 오류")
-    void checkUserFailWithKeyError() throws Exception {
-        CheckUserRequestDto data = new CheckUserRequestDto("user1234");
+    @DisplayName("아이디 중복체크 - 아이디 중복")
+    void checkUserFailWithDuplicateResource() throws Exception {
         post(URL)
-                .body(data).send()
-                .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.code").value(ResponseCode.KEY_ERROR.getCode()))
+                .key().body(DUPLICATE_DATA).send()
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.code").value(ResponseCode.DUPLICATE_RESOURCE.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 }
