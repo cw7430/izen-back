@@ -15,7 +15,7 @@ public class AuthControllerUpdatePasswordTest extends AuthControllerTest {
     @Test
     @DisplayName("비밀번호 변경 - 성공")
     void updatePasswordSuccess() throws Exception {
-        String accessToken = authTestUtil.getTestToken(defaultLoginData).accessToken();
+        String accessToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).accessToken();
         UpdatePasswordRequestDto updateData = new UpdatePasswordRequestDto(
                 "EMP003",
                 "password1234$%"
@@ -28,7 +28,7 @@ public class AuthControllerUpdatePasswordTest extends AuthControllerTest {
     @Test
     @DisplayName("비밀번호 변경 - 잘 못된 입력 값")
     void updatePasswordFailWithValidationError() throws Exception {
-        String accessToken = authTestUtil.getTestToken(defaultLoginData).accessToken();
+        String accessToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).accessToken();
         UpdatePasswordRequestDto updateData = new UpdatePasswordRequestDto(
                 "EMP003",
                 "123"
@@ -57,7 +57,7 @@ public class AuthControllerUpdatePasswordTest extends AuthControllerTest {
     @Test
     @DisplayName("비밀번호 변경 - 만료 된 토큰")
     void updatePasswordFailWithExpiredToken() throws Exception {
-        String accessToken = authTestUtil.generateExpiredAccessToken(defaultLoginData);
+        String accessToken = authTestUtil.generateExpiredAccessToken(DEFAULT_LOGIN_DATA);
         UpdatePasswordRequestDto updateData = new UpdatePasswordRequestDto(
                 "EMP003",
                 "password1234$%"
@@ -86,7 +86,7 @@ public class AuthControllerUpdatePasswordTest extends AuthControllerTest {
     @Test
     @DisplayName("비밀번호 변경 - 비밀번호 오류")
     void updatePasswordFailWithPasswordError() throws Exception {
-        String accessToken = authTestUtil.getTestToken(defaultLoginData).accessToken();
+        String accessToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).accessToken();
         UpdatePasswordRequestDto updateData = new UpdatePasswordRequestDto(
                 "EMP009",
                 "password1234$%"
@@ -101,7 +101,7 @@ public class AuthControllerUpdatePasswordTest extends AuthControllerTest {
     @Test
     @DisplayName("비밀번호 변경 - Api Key 오류")
     void updatePasswordFailWithKeyError() throws Exception {
-        String accessToken = authTestUtil.getTestToken(defaultLoginData).accessToken();
+        String accessToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).accessToken();
         UpdatePasswordRequestDto updateData = new UpdatePasswordRequestDto(
                 "EMP003",
                 "password1234$%"

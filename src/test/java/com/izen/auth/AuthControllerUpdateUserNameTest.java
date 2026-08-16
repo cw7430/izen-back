@@ -15,7 +15,7 @@ public class AuthControllerUpdateUserNameTest extends AuthControllerTest {
     @Test
     @DisplayName("아이디 변경 - 성공")
     void updateUserNameSuccess() throws Exception {
-        String accessToken = authTestUtil.getTestToken(defaultLoginData).accessToken();
+        String accessToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).accessToken();
         UpdateUserNameRequestDto updateData = new UpdateUserNameRequestDto(
                 "updateuser123",
                 "EMP003"
@@ -28,7 +28,7 @@ public class AuthControllerUpdateUserNameTest extends AuthControllerTest {
     @Test
     @DisplayName("아이디 변경 - 잘 못된 입력 값")
     void updateUserNameFailWithValidationError() throws Exception {
-        String accessToken = authTestUtil.getTestToken(defaultLoginData).accessToken();
+        String accessToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).accessToken();
         UpdateUserNameRequestDto updateData = new UpdateUserNameRequestDto(
                 "123",
                 "EMP003"
@@ -57,7 +57,7 @@ public class AuthControllerUpdateUserNameTest extends AuthControllerTest {
     @Test
     @DisplayName("아이디 변경 - 만료 된 토큰")
     void updateUserNameFailWithExpiredToken() throws Exception {
-        String accessToken = authTestUtil.generateExpiredAccessToken(defaultLoginData);
+        String accessToken = authTestUtil.generateExpiredAccessToken(DEFAULT_LOGIN_DATA);
         UpdateUserNameRequestDto updateData = new UpdateUserNameRequestDto(
                 "updateuser123",
                 "EMP003"
@@ -86,7 +86,7 @@ public class AuthControllerUpdateUserNameTest extends AuthControllerTest {
     @Test
     @DisplayName("아이디 변경 - 비밀번호 오류")
     void updateUserNameFailWithPasswordError() throws Exception {
-        String accessToken = authTestUtil.getTestToken(defaultLoginData).accessToken();
+        String accessToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).accessToken();
         UpdateUserNameRequestDto updateData = new UpdateUserNameRequestDto(
                 "updateuser123",
                 "123"
@@ -101,7 +101,7 @@ public class AuthControllerUpdateUserNameTest extends AuthControllerTest {
     @Test
     @DisplayName("아이디 변경 - Api Key 오류")
     void updateUserNameFailWithKeyError() throws Exception {
-        String accessToken = authTestUtil.getTestToken(defaultLoginData).accessToken();
+        String accessToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).accessToken();
         UpdateUserNameRequestDto updateData = new UpdateUserNameRequestDto(
                 "updateuser123",
                 "EMP003"
@@ -116,7 +116,7 @@ public class AuthControllerUpdateUserNameTest extends AuthControllerTest {
     @Test
     @DisplayName("아이디 변경 - 아이디 중복")
     void updateUserNameFailWithDuplicateResource() throws Exception {
-        String accessToken = authTestUtil.getTestToken(defaultLoginData).accessToken();
+        String accessToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).accessToken();
         UpdateUserNameRequestDto updateData = new UpdateUserNameRequestDto(
                 "EMP010",
                 "EMP003"

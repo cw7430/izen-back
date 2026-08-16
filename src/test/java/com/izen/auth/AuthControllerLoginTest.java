@@ -15,7 +15,7 @@ public class AuthControllerLoginTest extends AuthControllerTest {
     @Test
     @DisplayName("로그인 - 성공")
     void loginSuccess() throws Exception {
-        post(URL).key().body(defaultLoginData).send()
+        post(URL).key().body(DEFAULT_LOGIN_DATA).send()
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").isNotEmpty())
                 .andExpect(jsonPath("$.refreshToken").isNotEmpty());
@@ -54,7 +54,7 @@ public class AuthControllerLoginTest extends AuthControllerTest {
     @Test
     @DisplayName("로그인 - 잘못 된 API-KEY")
     void loginFailWithKeyError() throws Exception {
-        post(URL).body(defaultLoginData).send()
+        post(URL).body(DEFAULT_LOGIN_DATA).send()
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value(ResponseCode.KEY_ERROR.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
