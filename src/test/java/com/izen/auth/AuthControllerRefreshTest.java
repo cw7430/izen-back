@@ -37,7 +37,7 @@ public class AuthControllerRefreshTest extends AuthControllerTest {
     @DisplayName("토큰 재발급 - 잘못 된 토큰")
     void refreshFailWithInvalidToken() throws Exception {
         post(URL).key()
-                .auth("123dj3w989kp2ekohoiysofhawioerq87retreheiogujigbydfggauid").body(DATA)
+                .auth(INVALID_TOKEN).body(DATA)
                 .send().andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.code").value(ResponseCode.INVALID_TOKEN.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
