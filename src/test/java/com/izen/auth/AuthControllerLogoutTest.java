@@ -12,7 +12,7 @@ public class AuthControllerLogoutTest extends AuthControllerTest {
     @Test
     @DisplayName("로그아웃 - 성공")
     void logoutSuccess() throws Exception {
-        String refreshToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).refreshToken();
+        String refreshToken = authTestUtil.getTestToken(MASTER_LOGIN_DATA).refreshToken();
         LogoutRequestDto data = new LogoutRequestDto(refreshToken);
         post(URL)
                 .key().body(data).send()
@@ -40,7 +40,7 @@ public class AuthControllerLogoutTest extends AuthControllerTest {
     @Test
     @DisplayName("로그아웃 - Api Key 없이 성공")
     void logoutSuccessWithoutKey() throws Exception {
-        String refreshToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).refreshToken();
+        String refreshToken = authTestUtil.getTestToken(MASTER_LOGIN_DATA).refreshToken();
         LogoutRequestDto data = new LogoutRequestDto(refreshToken);
         post(URL)
                 .body(data).send()
