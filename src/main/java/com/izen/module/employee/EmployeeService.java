@@ -107,6 +107,9 @@ public class EmployeeService {
     public void updateEmployeeProfile(Long id, UpdateEmployeeProfileRequestDto reqDto) {
         Long accountId = jwtUtil.getCurrentUserId();
         checkProfilePermission(accountId);
+        if(!employeeMapper.existsByEmployeeId(id)) {
+            throw new CustomException(ResponseCode.RESOURCE_NOT_FOUND);
+        }
         int updateProfileCnt = employeeMapper.updateProfile(
                 id, reqDto.teamCode(),
                 reqDto.positionCode(),

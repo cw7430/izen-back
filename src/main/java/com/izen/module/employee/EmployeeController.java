@@ -284,6 +284,14 @@ public class EmployeeController {
                     )
             ),
             @ApiResponse(
+                    responseCode = "404", description = "없는 요소", content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDoc.ResourceNotFound.class)
+                    )
+            }
+            ),
+            @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
                     content = @Content(
