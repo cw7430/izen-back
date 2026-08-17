@@ -133,7 +133,7 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.getEmployeeProfile(id));
     }
 
-    @GetMapping("/employee-code")
+    @GetMapping("/profiles/employee-code")
     @Operation(summary = "사번 생성")
     @SecurityRequirement(name = "access-token")
     @ApiResponses(value = {
@@ -282,6 +282,14 @@ public class EmployeeController {
                                     }
                             )
                     )
+            ),
+            @ApiResponse(
+                    responseCode = "404", description = "없는 요소", content = {
+                    @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDoc.ResourceNotFound.class)
+                    )
+            }
             ),
             @ApiResponse(
                     responseCode = "500",

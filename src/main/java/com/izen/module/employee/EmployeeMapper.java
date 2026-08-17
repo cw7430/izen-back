@@ -25,6 +25,8 @@ public interface EmployeeMapper {
 
     Optional<EmployeeProfileResponseDto> findEmployeeProfileByEmployeeId(@Param("employeeId") Long employeeId);
 
+    boolean existsByEmployeeId(@Param("employeeId") Long employeeId);
+
     Optional<EmployeeCodeResponseDto> createEmployeeCode();
 
     Optional<String> findEmployeeTeam(@Param("employeeId") Long employeeId);

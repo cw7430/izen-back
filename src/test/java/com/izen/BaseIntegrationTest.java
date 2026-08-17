@@ -33,7 +33,7 @@ public abstract class BaseIntegrationTest {
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
     protected static final String BASE_URL = "/api/v1";
-    protected static final LoginRequestDto DEFAULT_LOGIN_DATA = new LoginRequestDto(
+    protected static final LoginRequestDto MASTER_LOGIN_DATA = new LoginRequestDto(
             "EMP003",
             "EMP003",
             false

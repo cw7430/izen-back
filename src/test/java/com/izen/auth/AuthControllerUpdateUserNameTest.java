@@ -31,7 +31,7 @@ public class AuthControllerUpdateUserNameTest extends AuthControllerTest {
     @Test
     @DisplayName("아이디 변경 - 성공")
     void updateUserNameSuccess() throws Exception {
-        String accessToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).accessToken();
+        String accessToken = authTestUtil.getTestToken(MASTER_LOGIN_DATA).accessToken();
         patch(URL)
                 .key().auth(accessToken).body(DATA)
                 .send().andExpect(status().isNoContent());
@@ -40,7 +40,7 @@ public class AuthControllerUpdateUserNameTest extends AuthControllerTest {
     @Test
     @DisplayName("아이디 변경 - 잘 못된 입력 값")
     void updateUserNameFailWithValidationError() throws Exception {
-        String accessToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).accessToken();
+        String accessToken = authTestUtil.getTestToken(MASTER_LOGIN_DATA).accessToken();
         patch(URL)
                 .key().auth(accessToken).body(INVALID_DATA)
                 .send().andExpect(status().isBadRequest())
@@ -61,7 +61,7 @@ public class AuthControllerUpdateUserNameTest extends AuthControllerTest {
     @Test
     @DisplayName("아이디 변경 - 만료 된 토큰")
     void updateUserNameFailWithExpiredToken() throws Exception {
-        String accessToken = authTestUtil.generateExpiredAccessToken(DEFAULT_LOGIN_DATA);
+        String accessToken = authTestUtil.generateExpiredAccessToken(MASTER_LOGIN_DATA);
         patch(URL)
                 .key().auth(accessToken).body(DATA)
                 .send().andExpect(status().isUnauthorized())
@@ -82,7 +82,7 @@ public class AuthControllerUpdateUserNameTest extends AuthControllerTest {
     @Test
     @DisplayName("아이디 변경 - 비밀번호 오류")
     void updateUserNameFailWithPasswordError() throws Exception {
-        String accessToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).accessToken();
+        String accessToken = authTestUtil.getTestToken(MASTER_LOGIN_DATA).accessToken();
         patch(URL)
                 .key().auth(accessToken).body(WRONG_PASSWORD_DATA)
                 .send().andExpect(status().isUnauthorized())
@@ -93,7 +93,7 @@ public class AuthControllerUpdateUserNameTest extends AuthControllerTest {
     @Test
     @DisplayName("아이디 변경 - Api Key 오류")
     void updateUserNameFailWithKeyError() throws Exception {
-        String accessToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).accessToken();
+        String accessToken = authTestUtil.getTestToken(MASTER_LOGIN_DATA).accessToken();
         patch(URL)
                 .auth(accessToken).body(DATA)
                 .send().andExpect(status().isForbidden())
@@ -104,7 +104,7 @@ public class AuthControllerUpdateUserNameTest extends AuthControllerTest {
     @Test
     @DisplayName("아이디 변경 - 아이디 중복")
     void updateUserNameFailWithDuplicateResource() throws Exception {
-        String accessToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).accessToken();
+        String accessToken = authTestUtil.getTestToken(MASTER_LOGIN_DATA).accessToken();
         patch(URL)
                 .key().auth(accessToken).body(DUPLICATE_DATA)
                 .send().andExpect(status().isConflict())

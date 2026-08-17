@@ -16,7 +16,7 @@ public class AuthControllerRefreshTest extends AuthControllerTest {
     @Test
     @DisplayName("토큰 재발급 - 성공")
     void refreshSuccess() throws Exception {
-        String refreshToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).refreshToken();
+        String refreshToken = authTestUtil.getTestToken(MASTER_LOGIN_DATA).refreshToken();
         post(URL)
                 .key().auth(refreshToken).body(DATA)
                 .send().andExpect(status().isOk())
@@ -46,7 +46,7 @@ public class AuthControllerRefreshTest extends AuthControllerTest {
     @Test
     @DisplayName("토큰 재발급 - 만료 된 토큰")
     void refreshFailWithExpiredToken() throws Exception {
-        String refreshToken = authTestUtil.generateExpiredRefreshToken(DEFAULT_LOGIN_DATA);
+        String refreshToken = authTestUtil.generateExpiredRefreshToken(MASTER_LOGIN_DATA);
         post(URL).key().auth(refreshToken).body(DATA)
                 .send().andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.code").value(ResponseCode.EXPIRED_TOKEN.getCode()))
@@ -57,7 +57,7 @@ public class AuthControllerRefreshTest extends AuthControllerTest {
     @Test
     @DisplayName("토큰 재발급 - Api Key 오류")
     void refreshFailWithKeyError() throws Exception {
-        String refreshToken = authTestUtil.getTestToken(DEFAULT_LOGIN_DATA).refreshToken();
+        String refreshToken = authTestUtil.getTestToken(MASTER_LOGIN_DATA).refreshToken();
         post(URL)
                 .auth(refreshToken).body(DATA)
                 .send().andExpect(status().isForbidden())
