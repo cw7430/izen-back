@@ -133,7 +133,7 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.getEmployeeProfile(id));
     }
 
-    @GetMapping("/employee-code")
+    @GetMapping("/profiles/employee-code")
     @Operation(summary = "사번 생성")
     @SecurityRequirement(name = "access-token")
     @ApiResponses(value = {
