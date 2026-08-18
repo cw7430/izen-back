@@ -6,9 +6,24 @@ on:
 
 jobs:
   deploy:
-    name: Deploy
+    name: Test & Build
     runs-on: ubuntu-latest
     environment: development
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: izen_test
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test1234
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test_user -d izen_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout
@@ -24,24 +39,20 @@ jobs:
       - name: Grant execute permission for Gradle
         run: chmod +x gradlew
 
-      - name: Create .env
+      - name: Integration Test And Build
+        run: ./gradlew clean build
+
+      - name: Prepare Artifact
         run: |
-          cat <<EOF > .env
-          DB_URL=${{ secrets.DEV_DB_URL }}
-          DB_USERNAME=${{ secrets.DEV_DB_USERNAME }}
-          DB_PASSWORD=${{ secrets.DEV_DB_PASSWORD }}
-          JWT_ACCESS_SECRET=${{ secrets.DEV_JWT_ACCESS_SECRET }}
-          JWT_REFRESH_SECRET=${{ secrets.DEV_JWT_REFRESH_SECRET }}
-          API_KEY=${{ secrets.DEV_API_KEY }}
-          EOF
+          mkdir -p artifact/report
 
-      - name: Build
-        run: ./gradlew bootJar
+          cp build/libs/*.jar artifact/app.jar
+          cp -r build/reports/tests/test/* artifact/report/
 
-      - name: Upload bootJar
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: izen
-          path: build/libs/*.jar
+          name: izen-dev
+          path: artifact/
           if-no-files-found: error
           retention-days: 7
