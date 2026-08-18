@@ -46,7 +46,7 @@ jobs:
         run: |
           mkdir -p artifact/report
 
-          cp build/libs/*.jar artifact/app.jar
+          cp build/libs/izen-1.0.0.jar artifact/app.jar
           cp -r build/reports/tests/test/* artifact/report/
 
       - name: Upload Artifact
