@@ -1,8 +1,11 @@
 spring:
+  config:
+    import: file:.env[.properties]
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/izen
-    username: postgres
-    password: # Secret Key
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   flyway:
     enabled: true
@@ -10,18 +13,18 @@ spring:
     baseline-version: 0
     locations:
       - classpath:db/migration/common
-      - classpath:db/migration/local
+      - classpath:db/migration/dev
 
 jwt:
   access:
-    secret: # Secret Key
+    secret: ${JWT_ACCESS_SECRET}
     expiration: 30m
   refresh:
-    secret: # Secret Key
+    secret: ${JWT_REFRESH_SECRET}
     expiration: 14d
 
 security:
-  api-key: # Secret Key
+  api-key: ${API_KEY}
 
 logging:
   level:

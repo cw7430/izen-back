@@ -8,7 +8,7 @@ spring:
     mapper:
       accept-case-insensitive-enums: true
   profiles:
-    active: local
+    active: dev
 
 server:
   port: 8080
