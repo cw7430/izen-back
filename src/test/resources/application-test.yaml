@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: file:.env[.properties]
   datasource:
     url: jdbc:postgresql://localhost:5432/izen_test
     username: test_user
@@ -9,20 +11,20 @@ spring:
     baseline-version: 0
     locations:
       - classpath:db/migration/common
-      - classpath:db/migration/local
+      - classpath:db/migration/dev
 
 
 jwt:
   access:
-    secret: test1test2test3test4test5test6test7test8test9test10test11
+    secret: ${JWT_ACCESS_SECRET}
     expiration: 30m
   refresh:
-    secret: test11test10test9test8test7test6test5test4test3test2test1
+    secret: ${JWT_REFRESH_SECRET}
     expiration: 14d
 
 
 security:
-  api-key: x-api-key_test11test10test9test8test7test6test5test4test3test2test1
+  api-key: ${API_KEY}
 
 logging:
   level:
