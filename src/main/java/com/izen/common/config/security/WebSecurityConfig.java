@@ -43,8 +43,8 @@ public class WebSecurityConfig {
 
     private List<String> allowedOrigins() {
         return switch (activeProfile) {
-            case "production" -> List.of("https://www.izen-erp.com");
-            case "development" -> List.of("https://test.izen-erp.com");
+            case "prod" -> List.of("https://www.izen-erp.com");
+            case "stage" -> List.of("https://test.izen-erp.com");
             default -> List.of("http://localhost:3000", "http://localhost:5137");
         };
     }

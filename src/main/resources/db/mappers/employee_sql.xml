@@ -187,7 +187,7 @@
             #{employeeName},
             (SELECT id FROM employee.team WHERE team_code = #{teamCode}),
             (SELECT id FROM employee.position WHERE position_code = #{positionCode}),
-            #{employeeRole},
+            #{employeeRole}::employee.employee_role,
             #{createdBy},
             #{updatedBy})
   </insert>
@@ -195,7 +195,7 @@
   <update id="updateProfile">
     /* EmployeeMapper.updateProfile */
     UPDATE employee.profile
-    SET employee_role = #{employeeRole},
+    SET employee_role = #{employeeRole}::employee.employee_role,
         team_id       = (SELECT id FROM employee.team WHERE team_code = #{teamCode}),
         position_id   = (SELECT id FROM employee.position WHERE position_code = #{positionCode}),
         updated_by    = #{updatedBy},

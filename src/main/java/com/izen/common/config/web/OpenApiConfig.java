@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 
 @Configuration
-@Profile("!production")
+@Profile("!prod")
 public class OpenApiConfig {
 
     private final String secretApiKey;
@@ -51,15 +51,13 @@ public class OpenApiConfig {
         return openApi -> {
             if (openApi.getPaths() != null) {
                 openApi.getPaths().values().forEach(pathItem ->
-                        pathItem.readOperations().forEach(operation -> {
-                            operation.addParametersItem(
-                                    new HeaderParameter()
-                                            .name("X-API-Key")
-                                            .description("자동 입력된 API Key")
-                                            .required(true)
-                                            .schema(new StringSchema()._default(secretApiKey))
-                            );
-                        })
+                        pathItem.readOperations().forEach(operation -> operation.addParametersItem(
+                                new HeaderParameter()
+                                        .name("X-API-Key")
+                                        .description("자동 입력된 API Key")
+                                        .required(true)
+                                        .schema(new StringSchema()._default(secretApiKey))
+                        ))
                 );
             }
         };
