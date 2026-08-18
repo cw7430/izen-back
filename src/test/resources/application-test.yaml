@@ -1,6 +1,4 @@
 spring:
-  config:
-    import: file:.env[.properties]
   datasource:
     url: jdbc:postgresql://localhost:5432/izen_test
     username: test_user
@@ -16,15 +14,15 @@ spring:
 
 jwt:
   access:
-    secret: ${JWT_ACCESS_SECRET}
+    secret: test1test2test3test4test5test6test7test8test9test10test11
     expiration: 30m
   refresh:
-    secret: ${JWT_REFRESH_SECRET}
+    secret: test11test10test9test8test7test6test5test4test3test2test1
     expiration: 14d
 
 
 security:
-  api-key: ${API_KEY}
+  api-key: x-api-key_test11test10test9test8test7test6test5test4test3test2test1
 
 logging:
   level:
