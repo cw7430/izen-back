@@ -2,7 +2,7 @@ name: Deploy Dev Only CI
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   deploy:
@@ -43,16 +43,25 @@ jobs:
         run: ./gradlew clean build
 
       - name: Prepare Artifact
+        if: success()
         run: |
-          mkdir -p artifact/report
-
+          mkdir -p artifact
           cp build/libs/izen-1.0.0.jar artifact/app.jar
-          cp -r build/reports/tests/test/* artifact/report/
 
       - name: Upload Artifact
+        if: success()
         uses: actions/upload-artifact@v7.0.1
         with:
           name: izen-dev
           path: artifact/
           if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload Test Report
+        if: always()
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: izen-test-report
+          path: build/reports/tests/test/
+          if-no-files-found: warn
           retention-days: 7
