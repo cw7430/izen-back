@@ -40,11 +40,11 @@ public class PageResponse<T> {
     private boolean hasPrevious;
 
     public static <T> PageResponse<T> of(List<T> contents, PageRequest pageRequest, long totalElements) {
-        int totalPages = (int) Math.ceil((double) totalElements / pageRequest.getSize());
+        int totalPages = totalElements == 0 ? 1 : (int) Math.ceil((double) totalElements / pageRequest.getSize());
 
         int startPage = ((pageRequest.getPage() - 1) / pageRequest.getBlockSize())
                 * pageRequest.getBlockSize() + 1;
-        int endPage = startPage + pageRequest.getBlockSize() - 1;
+        int endPage = Math.min(startPage + pageRequest.getBlockSize() - 1, totalPages);
 
         return new PageResponse<>(
                 contents, totalElements, totalPages, pageRequest.getPage(),

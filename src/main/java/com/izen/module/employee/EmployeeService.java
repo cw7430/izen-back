@@ -44,6 +44,9 @@ public class EmployeeService {
         List<EmployeeProfileVo> employeeProfileList =
                 employeeMapper.findEmployeeProfileList(reqDto);
         long totalElements = employeeMapper.countEmployeeProfileList();
+        if (totalElements > 0 && employeeProfileList.isEmpty()) {
+            throw new CustomException(ResponseCode.RESOURCE_NOT_FOUND);
+        }
         PageResponse<EmployeeProfileVo> pagedEmployeeProfileList = PageResponse.of(employeeProfileList, reqDto, totalElements);
         List<DepartmentResponseDto> departmentList = employeeMapper.findDepartmentList();
         List<PositionResponseDto> positionList = employeeMapper.findPositionList();
@@ -107,7 +110,7 @@ public class EmployeeService {
     public void updateEmployeeProfile(Long id, UpdateEmployeeProfileRequestDto reqDto) {
         Long accountId = jwtUtil.getCurrentUserId();
         checkProfilePermission(accountId);
-        if(!employeeMapper.existsByEmployeeId(id)) {
+        if (!employeeMapper.existsByEmployeeId(id)) {
             throw new CustomException(ResponseCode.RESOURCE_NOT_FOUND);
         }
         int updateProfileCnt = employeeMapper.updateProfile(

@@ -12,6 +12,7 @@ public class EmployeeControllerProfileListTest extends EmployeeControllerTest {
     private static final String URL = HR_URL + "/profiles";
     private static final String PARAM = "?page=1&size=5&blockSize=5&sortPath=employee&sortOrder=asc";
     private static final String INVALID_PARAM = "?page=0&size=0&blockSize=0&sortPath=0&sortOrder=0";
+    private static final String INVALID_PAGE_PARAM = "?page=99999999&size=5&blockSize=5&sortPath=employee&sortOrder=asc";
 
     @Test
     @DisplayName("직원 프로필 목록 불러오기 - 성공")
@@ -74,6 +75,16 @@ public class EmployeeControllerProfileListTest extends EmployeeControllerTest {
         get(URL + PARAM)
                 .auth(accessToken).send().andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value(ResponseCode.KEY_ERROR.getCode()))
+                .andExpect(jsonPath("$.message").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("직원 프로필 목록 불러오기 - 요소 없음")
+    void getProfileListFailWithResourceNotFound() throws Exception {
+        String accessToken = authTestUtil.getTestToken(PROFILE_LOGIN_DATA).accessToken();
+        get(URL + INVALID_PAGE_PARAM)
+                .key().auth(accessToken).send().andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value(ResponseCode.RESOURCE_NOT_FOUND.getCode()))
                 .andExpect(jsonPath("$.message").isNotEmpty());
     }
 }
