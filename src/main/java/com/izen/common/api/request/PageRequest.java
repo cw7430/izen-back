@@ -10,11 +10,12 @@ import lombok.Setter;
 @Setter
 @Schema(name = "PageRequest")
 public class PageRequest {
-    @Min(value = 1, message = "1 이상만 가능합니다.")
+    @Min(value = 1, message = "1 이상 2,000,000,000 이하만 가능합니다.")
+    @Max(value = 2000000000, message = "1 이상 2,000,000,000 이하만 가능합니다.")
     private Integer page = 1;
 
-    @Min(value = 5, message = "1 이상 100 이하만 가능합니다.")
-    @Max(value = 100, message = "1 이상 100 이하만 가능합니다.")
+    @Min(value = 5, message = "5 이상 100 이하만 가능합니다.")
+    @Max(value = 100, message = "5 이상 100 이하만 가능합니다.")
     private Integer size = 5;
 
     @Min(value = 5, message = "5 이상 10 이하만 가능합니다.")
