@@ -98,7 +98,7 @@
            basic_salary,
            incentive_salary
     FROM employee.position
-    ORDER BY position_code
+    ORDER BY position_code DESC
   </select>
 
   <select id="countEmployeeProfileList" resultType="long">
